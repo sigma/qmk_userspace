@@ -78,7 +78,7 @@ bool process_detected_host_os_user(os_variant_t os) {
 }
 #endif
 
-bool __process_record_user(uint16_t keycode, keyrecord_t *record) {
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   os_variant_t os_target = detected_host_os();
   bool pressed = record->event.pressed;
 
