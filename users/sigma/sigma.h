@@ -24,6 +24,7 @@
 enum userspace_layers
   {
    _QWERTY = 0,
+   _FN,
   };
 
 enum userspace_custom_keycodes
@@ -42,3 +43,16 @@ enum userspace_custom_keycodes
    MD_BOOT,           // Hold to reset into bootloader
    NEW_SAFE_RANGE     //use NEW_SAFE_RANGE for keymap specific codes
   };
+
+// Shared layout primitives: each keyboard's LAYOUT(...) wraps these inner
+// rows with whatever extra keys its physical chassis carries.
+#define SIGMA_NUM_ROW KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0
+#define SIGMA_QWE_ROW KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P
+#define SIGMA_ASD_ROW KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT
+#define SIGMA_ZXC_ROW KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH
+
+// Behavior tokens shared across keymaps.
+#define SIGMA_CTL  LCTL_T(KC_ENT)
+#define SIGMA_LSFT SC_LSPO
+#define SIGMA_RSFT SC_RSPC
+#define SIGMA_FN   MO(_FN)
