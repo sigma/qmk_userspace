@@ -16,6 +16,4 @@
 */
 #pragma once
 
-#define LEADER_TIMEOUT 1000
-
 #define MACRO_TIMER 5

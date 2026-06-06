@@ -18,28 +18,13 @@
 
 #include "quantum.h"
 #include "version.h"
-#include "eeprom.h"
-
-// Define os types
-enum os_types
-  {
-   _OS_MACOS = 0,
-   _OS_LINUX,
-   _OS_WINDOWS,
-  };
+#include "os_detection.h"
 
 // Define layer names
 enum userspace_layers
   {
    _QWERTY = 0,
   };
-
-typedef union {
-  uint32_t raw;
-  struct {
-    uint8_t os_target :2;
-  };
-} userspace_config_t;
 
 enum userspace_custom_keycodes
   {

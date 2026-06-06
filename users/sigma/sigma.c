@@ -16,9 +16,6 @@
 */
 #include "sigma.h"
 
-userspace_config_t runtime_userspace_config;
-userspace_config_t stored_userspace_config;
-
 __attribute__ ((weak))
 void matrix_init_keymap(void) {}
 
@@ -61,53 +58,28 @@ layer_state_t default_layer_state_set_keymap (layer_state_t state) {
 __attribute__ ((weak))
 void led_set_keymap(uint8_t usb_led) {}
 
-void set_os(uint8_t os) {
-  runtime_userspace_config.os_target = os;
-
 #if defined(UNICODE_ENABLE) || defined(UNICODEMAP_ENABLE) || defined(UCIS_ENABLE)
+bool process_detected_host_os_user(os_variant_t os) {
   switch (os) {
-  case _OS_MACOS:
+  case OS_MACOS:
+  case OS_IOS:
     set_unicode_input_mode(UNICODE_MODE_MACOS);
     break;
-  case _OS_LINUX:
+  case OS_LINUX:
     set_unicode_input_mode(UNICODE_MODE_LINUX);
     break;
-  case _OS_WINDOWS:
+  case OS_WINDOWS:
     set_unicode_input_mode(UNICODE_MODE_WINDOWS);
     break;
+  case OS_UNSURE:
+    break;
   }
+  return true;
+}
 #endif
-}
-
-void matrix_init_user(void) {
-  stored_userspace_config.raw = eeconfig_read_user();
-  runtime_userspace_config.raw = stored_userspace_config.raw;
-
-  set_os(runtime_userspace_config.os_target);
-}
-
-void store_userspace_config(void) {
-  eeconfig_update_user(stored_userspace_config.raw);
-}
-
-void leader_end_user(void) {
-  if (leader_sequence_two_keys(KC_F1, KC_L)) {
-    set_os(_OS_LINUX);
-  }
-  if (leader_sequence_two_keys(KC_F1, KC_M)) {
-    set_os(_OS_MACOS);
-  }
-  if (leader_sequence_two_keys(KC_F1, KC_W)) {
-    set_os(_OS_WINDOWS);
-  }
-  if (leader_sequence_two_keys(KC_F1, KC_S)) {
-    stored_userspace_config.raw = runtime_userspace_config.raw;
-    store_userspace_config();
-  }
-}
 
 bool __process_record_user(uint16_t keycode, keyrecord_t *record) {
-  uint8_t os_target = runtime_userspace_config.os_target;
+  os_variant_t os_target = detected_host_os();
   bool pressed = record->event.pressed;
 
   switch (keycode) {
@@ -140,8 +112,6 @@ bool __process_record_user(uint16_t keycode, keyrecord_t *record) {
       eeconfig_init();
       default_layer_set(1UL<<eeconfig_read_default_layer());
       layer_state_set(layer_state);
-      set_os(_OS_MACOS);
-      store_userspace_config();
     }
     return false;
     break;
@@ -154,11 +124,12 @@ bool __process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   case KC_OS_CUT:
     switch (os_target) {
-    case _OS_MACOS:
+    case OS_MACOS:
+    case OS_IOS:
       if (pressed)
         SEND_STRING(SS_LGUI("x"));
       break;
-    case _OS_LINUX:
+    case OS_LINUX:
       pressed ?
         register_code(KC_CUT)
         : unregister_code(KC_CUT);
@@ -172,11 +143,12 @@ bool __process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   case KC_OS_COPY:
     switch (os_target) {
-    case _OS_MACOS:
+    case OS_MACOS:
+    case OS_IOS:
       if (pressed)
         SEND_STRING(SS_LGUI("c"));
       break;
-    case _OS_LINUX:
+    case OS_LINUX:
       pressed ?
         register_code(KC_COPY)
         : unregister_code(KC_COPY);
@@ -190,11 +162,12 @@ bool __process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   case KC_OS_PASTE:
     switch (os_target) {
-    case _OS_MACOS:
+    case OS_MACOS:
+    case OS_IOS:
       if (pressed)
         SEND_STRING(SS_LGUI("v"));
       break;
-    case _OS_LINUX:
+    case OS_LINUX:
       pressed ?
         register_code(KC_PASTE)
         : unregister_code(KC_PASTE);
@@ -208,11 +181,12 @@ bool __process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   case KC_OS_UNDO:
     switch (os_target) {
-    case _OS_MACOS:
+    case OS_MACOS:
+    case OS_IOS:
       if (pressed)
         SEND_STRING(SS_LGUI("z"));
       break;
-    case _OS_LINUX:
+    case OS_LINUX:
       pressed ?
         register_code(KC_UNDO)
         : unregister_code(KC_UNDO);
@@ -226,11 +200,12 @@ bool __process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   case KC_OS_REDO:
     switch (os_target) {
-    case _OS_MACOS:
+    case OS_MACOS:
+    case OS_IOS:
       if (pressed)
         SEND_STRING(SS_LGUI(SS_LSFT("z")));
       break;
-    case _OS_LINUX:
+    case OS_LINUX:
       pressed ?
         register_code(KC_AGAIN)
         : unregister_code(KC_AGAIN);
@@ -244,11 +219,12 @@ bool __process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   case KC_OS_LOCK:
     switch (os_target) {
-    case _OS_MACOS:
+    case OS_MACOS:
+    case OS_IOS:
       if (pressed)
         SEND_STRING(SS_LGUI(SS_LCTL("q")));
       break;
-    case _OS_LINUX:
+    case OS_LINUX:
       pressed ?
         register_code(KC_PWR)
         : unregister_code(KC_PWR);
