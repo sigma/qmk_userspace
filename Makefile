@@ -12,5 +12,11 @@ ifeq ($(QMK_FIRMWARE_ROOT),)
     $(error Cannot determine qmk_firmware location. `qmk config -ro user.qmk_home` is not set)
 endif
 
+# Wrap clean so the lingering *.hex/*.bin/*.uf2 in the userspace root get
+# removed along with .build/. Upstream's distclean_userspace already does both.
+.PHONY: clean
+clean:
+	+$(MAKE) -C $(QMK_FIRMWARE_ROOT) distclean_userspace QMK_USERSPACE=$(QMK_USERSPACE)
+
 %:
 	+$(MAKE) -C $(QMK_FIRMWARE_ROOT) $(MAKECMDGOALS) QMK_USERSPACE=$(QMK_USERSPACE)
