@@ -41,7 +41,7 @@ enum userspace_custom_keycodes
    KC_OS_LOCK,
    KC_SCRT,
    MD_BOOT,           // Hold to reset into bootloader
-   NEW_SAFE_RANGE     //use NEW_SAFE_RANGE for keymap specific codes
+   SIGMA_SAFE_RANGE   // base for keymap-specific custom keycodes
   };
 
 // Shared layout primitives: each keyboard's LAYOUT(...) wraps these inner
@@ -64,7 +64,8 @@ enum userspace_custom_keycodes
 #define SIGMA_ZXC_ROW SIGMA_ZXC_L, SIGMA_ZXC_R
 
 // Behavior tokens shared across keymaps.
-#define SIGMA_CTL  LCTL_T(KC_ENT)
-#define SIGMA_LSFT SC_LSPO
-#define SIGMA_RSFT SC_RSPC
-#define SIGMA_FN   MO(_FN)
+#define SIGMA_CTL   LCTL_T(KC_ENT)
+#define SIGMA_CTL_R RCTL_T(KC_ENT)
+#define SIGMA_LSFT  SC_LSPO
+#define SIGMA_RSFT  SC_RSPC
+#define SIGMA_FN    MO(_FN)
