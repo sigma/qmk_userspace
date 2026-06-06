@@ -5,6 +5,7 @@
         ["converter/sun_usb/type5", "sigma"],
         ["input_club/ergodox_infinity", "sigma"],
         ["ergodox_ez", "sigma"],
-        ["keychron/k8_pro/ansi/rgb", "sigma", {"alt_home": "keychron"}]
+        ["keychron/k8_pro/ansi/rgb", "sigma", {"alt_home": "keychron"}],
+        ["keychron/q1_max/ansi_encoder", "sigma", {"alt_home": "keychron"}]
     ]
 }
