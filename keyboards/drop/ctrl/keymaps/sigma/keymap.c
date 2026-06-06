@@ -1,11 +1,11 @@
 #include QMK_KEYBOARD_H
+#include "sigma.h"
 
 enum ctrl_keycodes {
-    DBG_TOG = SAFE_RANGE, //DEBUG Toggle On / Off
-    DBG_MTRX,             //DEBUG Toggle Matrix Prints
-    DBG_KBD,              //DEBUG Toggle Keyboard Prints
-    DBG_MOU,              //DEBUG Toggle Mouse Prints
-    MD_BOOT,              //Restart into bootloader after hold timeout
+    DBG_TOG = NEW_SAFE_RANGE, //DEBUG Toggle On / Off
+    DBG_MTRX,                 //DEBUG Toggle Matrix Prints
+    DBG_KBD,                  //DEBUG Toggle Keyboard Prints
+    DBG_MOU,                  //DEBUG Toggle Mouse Prints
 };
 
 #define CTLRET LCTL_T(KC_ENT)
@@ -30,8 +30,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
-    static uint32_t key_timer;
-
     switch (keycode) {
         case DBG_TOG:
             if (record->event.pressed) {
@@ -51,15 +49,6 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
         case DBG_MOU:
             if (record->event.pressed) {
                 debug_mouse = !debug_mouse;
-            }
-            return false;
-        case MD_BOOT:
-            if (record->event.pressed) {
-                key_timer = timer_read32();
-            } else {
-                if (timer_elapsed32(key_timer) >= 500) {
-                    reset_keyboard();
-                }
             }
             return false;
         case RM_TOGG:

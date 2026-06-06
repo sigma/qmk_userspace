@@ -79,6 +79,7 @@ bool process_detected_host_os_user(os_variant_t os) {
 #endif
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  static uint32_t md_boot_timer;
   os_variant_t os_target = detected_host_os();
   bool pressed = record->event.pressed;
 
@@ -241,6 +242,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       SEND_STRING(SS_LGUI("`"));
     }
     break;
+
+  case MD_BOOT:
+    if (pressed) {
+      md_boot_timer = timer_read32();
+    } else if (timer_elapsed32(md_boot_timer) >= 500) {
+      reset_keyboard();
+    }
+    return false;
   }
 
   return process_record_keymap(keycode, record);

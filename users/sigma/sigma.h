@@ -39,5 +39,6 @@ enum userspace_custom_keycodes
    KC_OS_REDO,
    KC_OS_LOCK,
    KC_SCRT,
+   MD_BOOT,           // Hold to reset into bootloader
    NEW_SAFE_RANGE     //use NEW_SAFE_RANGE for keymap specific codes
   };
