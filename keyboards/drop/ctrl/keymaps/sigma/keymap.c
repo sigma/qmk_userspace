@@ -1,13 +1,11 @@
 #include QMK_KEYBOARD_H
 
 enum ctrl_keycodes {
-    U_T_AUTO = SAFE_RANGE, //USB Extra Port Toggle Auto Detect / Always Active
-    U_T_AGCR,              //USB Toggle Automatic GCR control
-    DBG_TOG,               //DEBUG Toggle On / Off
-    DBG_MTRX,              //DEBUG Toggle Matrix Prints
-    DBG_KBD,               //DEBUG Toggle Keyboard Prints
-    DBG_MOU,               //DEBUG Toggle Mouse Prints
-    MD_BOOT,               //Restart into bootloader after hold timeout
+    DBG_TOG = SAFE_RANGE, //DEBUG Toggle On / Off
+    DBG_MTRX,             //DEBUG Toggle Matrix Prints
+    DBG_KBD,              //DEBUG Toggle Keyboard Prints
+    DBG_MOU,              //DEBUG Toggle Mouse Prints
+    MD_BOOT,              //Restart into bootloader after hold timeout
 };
 
 #define CTLRET LCTL_T(KC_ENT)
@@ -24,59 +22,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [1] = LAYOUT(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,            KC_MUTE, _______, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,   KC_MPLY, KC_MSTP, KC_VOLU,
-        _______, RGB_SPD, RGB_VAI, RGB_SPI, RGB_HUI, RGB_SAI, _______, U_T_AUTO,U_T_AGCR,_______, _______, _______, _______, _______,   KC_MPRV, KC_MNXT, KC_VOLD,
-        _______, RGB_RMOD,RGB_VAD, RGB_MOD, RGB_HUD, RGB_SAD, _______, _______, _______, _______, _______, _______, _______,
-        _______, RGB_TOG, _______, _______, _______, MD_BOOT, NK_TOGG, _______, _______, _______, _______, _______,                              _______,
+        _______, RM_SPDD, RM_VALU, RM_SPDU, RM_HUEU, RM_SATU, _______, _______, _______, _______, _______, _______, _______, _______,   KC_MPRV, KC_MNXT, KC_VOLD,
+        _______, RM_PREV, RM_VALD, RM_NEXT, RM_HUED, RM_SATD, _______, _______, _______, _______, _______, _______, _______,
+        _______, RM_TOGG, _______, _______, _______, MD_BOOT, NK_TOGG, _______, _______, _______, _______, _______,                              _______,
         _______, _______, _______,                   _______,                            _______, _______, _______, _______,            _______, _______, _______
     ),
-    /*
-    [X] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,            _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,   _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,   _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, NK_TOGG, _______, _______, _______, _______, _______,                              _______,
-        _______, _______, _______,                   _______,                            _______, _______, _______, _______,            _______, _______, _______
-    ),
-    */
 };
-
-#define MODS_SHIFT  (get_mods() & MOD_MASK_SHIFT)
-#define MODS_CTRL   (get_mods() & MOD_MASK_CTRL)
-#define MODS_ALT    (get_mods() & MOD_MASK_ALT)
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint32_t key_timer;
 
     switch (keycode) {
-        case U_T_AUTO:
-            if (record->event.pressed && MODS_SHIFT && MODS_CTRL) {
-                TOGGLE_FLAG_AND_PRINT(usb_extra_manual, "USB extra port manual mode");
-            }
-            return false;
-        case U_T_AGCR:
-            if (record->event.pressed && MODS_SHIFT && MODS_CTRL) {
-                TOGGLE_FLAG_AND_PRINT(usb_gcr_auto, "USB GCR auto mode");
-            }
-            return false;
         case DBG_TOG:
             if (record->event.pressed) {
-                TOGGLE_FLAG_AND_PRINT(debug_enable, "Debug mode");
+                debug_enable = !debug_enable;
             }
             return false;
         case DBG_MTRX:
             if (record->event.pressed) {
-                TOGGLE_FLAG_AND_PRINT(debug_matrix, "Debug matrix");
+                debug_matrix = !debug_matrix;
             }
             return false;
         case DBG_KBD:
             if (record->event.pressed) {
-                TOGGLE_FLAG_AND_PRINT(debug_keyboard, "Debug keyboard");
+                debug_keyboard = !debug_keyboard;
             }
             return false;
         case DBG_MOU:
             if (record->event.pressed) {
-                TOGGLE_FLAG_AND_PRINT(debug_mouse, "Debug mouse");
+                debug_mouse = !debug_mouse;
             }
             return false;
         case MD_BOOT:
@@ -88,7 +62,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
-        case RGB_TOG:
+        case RM_TOGG:
             if (record->event.pressed) {
               switch (rgb_matrix_get_flags()) {
                 case LED_FLAG_ALL: {
