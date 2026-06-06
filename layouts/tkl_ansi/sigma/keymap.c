@@ -2,7 +2,7 @@
 #include "sigma.h"
 
 // Indirection so SIGMA_*_ROW macros expand before LAYOUT counts its args.
-#define KMAP(...) LAYOUT(__VA_ARGS__)
+#define KMAP(...) LAYOUT_tkl_ansi(__VA_ARGS__)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = KMAP(
@@ -23,6 +23,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
+#ifdef RGB_MATRIX_ENABLE
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case RM_TOGG:
@@ -55,3 +56,4 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
             return true;
     }
 }
+#endif

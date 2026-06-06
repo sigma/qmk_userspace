@@ -6,7 +6,7 @@ Personal [QMK](https://github.com/qmk/qmk_firmware) keymaps for the boards I use
 
 | Target | Keymap location |
 |--------|-----------------|
-| `drop/ctrl/v2` | `keyboards/drop/ctrl/keymaps/sigma/` |
+| `drop/ctrl/v2` | `layouts/tkl_ansi/sigma/` (community layout) |
 | `converter/sun_usb/type5` | `keyboards/converter/sun_usb/type5/keymaps/sigma/` |
 | `ergodox_ez`, `input_club/ergodox_infinity` | `layouts/ergodox/sigma/` (community layout) |
 
