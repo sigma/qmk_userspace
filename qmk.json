@@ -3,6 +3,7 @@
     "build_targets": [
         ["drop/ctrl/v2", "sigma"],
         ["converter/sun_usb/type5", "sigma"],
-        ["input_club/ergodox_infinity", "sigma"]
+        ["input_club/ergodox_infinity", "sigma"],
+        ["ergodox_ez", "sigma"]
     ]
 }
