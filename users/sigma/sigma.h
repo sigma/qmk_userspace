@@ -45,11 +45,23 @@ enum userspace_custom_keycodes
   };
 
 // Shared layout primitives: each keyboard's LAYOUT(...) wraps these inner
-// rows with whatever extra keys its physical chassis carries.
-#define SIGMA_NUM_ROW KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0
-#define SIGMA_QWE_ROW KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P
-#define SIGMA_ASD_ROW KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT
-#define SIGMA_ZXC_ROW KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH
+// rows with whatever extra keys its physical chassis carries. Each row is
+// split into L/R halves so split keyboards can grab one hand at a time.
+#define SIGMA_NUM_L KC_1, KC_2, KC_3, KC_4, KC_5
+#define SIGMA_NUM_R KC_6, KC_7, KC_8, KC_9, KC_0
+#define SIGMA_NUM_ROW SIGMA_NUM_L, SIGMA_NUM_R
+
+#define SIGMA_QWE_L KC_Q, KC_W, KC_E, KC_R, KC_T
+#define SIGMA_QWE_R KC_Y, KC_U, KC_I, KC_O, KC_P
+#define SIGMA_QWE_ROW SIGMA_QWE_L, SIGMA_QWE_R
+
+#define SIGMA_ASD_L KC_A, KC_S, KC_D, KC_F, KC_G
+#define SIGMA_ASD_R KC_H, KC_J, KC_K, KC_L, KC_SCLN
+#define SIGMA_ASD_ROW SIGMA_ASD_L, SIGMA_ASD_R, KC_QUOT
+
+#define SIGMA_ZXC_L KC_Z, KC_X, KC_C, KC_V, KC_B
+#define SIGMA_ZXC_R KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH
+#define SIGMA_ZXC_ROW SIGMA_ZXC_L, SIGMA_ZXC_R
 
 // Behavior tokens shared across keymaps.
 #define SIGMA_CTL  LCTL_T(KC_ENT)
