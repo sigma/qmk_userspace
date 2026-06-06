@@ -1,59 +1,44 @@
-# QMK Userspace
+# Sigma's QMK Userspace
 
-This is a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the [main QMK repository](https://github.com/qmk/qmk_firmware). You must still fork the main QMK repository if writing firmware for a *new* keyboard.
+Personal [QMK](https://github.com/qmk/qmk_firmware) keymaps for the boards I use, sharing a common `users/sigma/` core so the central QWERTY block stays consistent across very different chassis.
 
-## Howto configure your build targets
+## Keyboards
 
-1. Run the normal `qmk setup` procedure if you haven't already done so -- see [QMK Docs](https://docs.qmk.fm/#/newbs) for details.
-1. Fork this repository
-1. Clone your fork to your local machine
-1. Enable userspace in QMK config using `qmk config user.overlay_dir="$(realpath qmk_userspace)"`
-1. Add a new keymap for your board using `qmk new-keymap`
-    * This will create a new keymap in the `keyboards` directory, in the same location that would normally be used in the main QMK repository. For example, if you wanted to add a keymap for the Planck, it will be created in `keyboards/planck/keymaps/<your keymap name>`
-    * You can also create a new keymap using `qmk new-keymap -kb <your_keyboard> -km <your_keymap>`
-    * Alternatively, add your keymap manually by placing it in the location specified above.
-    * `layouts/<layout name>/<your keymap name>/keymap.*` is also supported if you prefer the layout system
-1. Add your keymap(s) to the build by running `qmk userspace-add -kb <your_keyboard> -km <your_keymap>`
-    * This will automatically update your `qmk.json` file
-    * Corresponding `qmk userspace-remove -kb <your_keyboard> -km <your_keymap>` will delete it
-    * Listing the build targets can be done with `qmk userspace-list`
-1. Commit your changes
+| Target | Keymap location |
+|--------|-----------------|
+| `drop/ctrl/v2` | `keyboards/drop/ctrl/keymaps/sigma/` |
+| `converter/sun_usb/type5` | `keyboards/converter/sun_usb/type5/keymaps/sigma/` |
+| `ergodox_ez`, `input_club/ergodox_infinity` | `layouts/ergodox/sigma/` (community layout) |
 
-## Howto build with GitHub
+All four are listed in `qmk.json`'s `build_targets`.
 
-1. In the GitHub Actions tab, enable workflows
-1. Push your changes above to your forked GitHub repository
-1. Look at the GitHub Actions for a new actions run
-1. Wait for the actions run to complete
-1. Inspect the Releases tab on your repository for the latest firmware build
+## Shared userspace (`users/sigma/`)
 
-## Howto build locally
+- Auto OS detection via QMK's [`os_detection`](https://docs.qmk.fm/features/os_detection) feature, driving `set_unicode_input_mode` when unicode is enabled.
+- `KC_OS_CUT/COPY/PASTE/UNDO/REDO/LOCK` keycodes that translate to the right shortcut per OS (macOS/iOS/Linux/Windows).
+- `KC_MAKE`, `KC_QWERTY`, `KC_SCRT`, `MD_BOOT` (hold-to-bootloader), `VRSN`, `EPRM`.
+- Layout primitives for the central QWERTY block, each row split into hand-halves so split keyboards can grab one at a time:
+  - `SIGMA_NUM_L/R/ROW`, `SIGMA_QWE_L/R/ROW`, `SIGMA_ASD_L/R/ROW`, `SIGMA_ZXC_L/R/ROW`
+- Behavior tokens shared across keymaps:
+  - `SIGMA_CTL` = `LCTL_T(KC_ENT)` (home-row Ctrl/Enter mod-tap)
+  - `SIGMA_LSFT` / `SIGMA_RSFT` = `SC_LSPO` / `SC_RSPC` (space-cadet shifts)
+  - `SIGMA_FN` = `MO(_FN)`
 
-1. Run the normal `qmk setup` procedure if you haven't already done so -- see [QMK Docs](https://docs.qmk.fm/#/newbs) for details.
-1. Fork this repository
-1. Clone your fork to your local machine
-1. `cd` into this repository's clone directory
-1. Set global userspace path: `qmk config user.overlay_dir="$(realpath .)"` -- you MUST be located in the cloned userspace location for this to work correctly
-    * This will be automatically detected if you've `cd`ed into your userspace repository, but the above makes your userspace available regardless of your shell location.
-1. Compile normally: `qmk compile -kb your_keyboard -km your_keymap` or `make your_keyboard:your_keymap`
+Every keymap uses `_QWERTY` and `_FN` layers, and wraps the keyboard's `LAYOUT(...)` macro with a local `KMAP(...)` indirection so the row macros expand before LAYOUT counts its args.
 
-Alternatively, if you configured your build targets above, you can use `qmk userspace-compile` to build all of your userspace targets at once.
+## Building
 
-## Extra info
+A Nix flake provides QMK via [firefly-engineering/toolbox](https://github.com/firefly-engineering/toolbox)'s `kbd-toolchain` (bundles `qmk`, `qmk_hid`, `vitaly`). `direnv` activates the shell automatically.
 
-If you wish to point GitHub actions to a different repository, a different branch, or even a different keymap name, you can modify `.github/workflows/build_binaries.yml` to suit your needs.
-
-To override the `build` job, you can change the following parameters to use a different QMK repository or branch:
-```
-    with:
-      qmk_repo: qmk/qmk_firmware
-      qmk_ref: master
+```sh
+direnv allow                                 # one-time
+qmk userspace-compile                        # build every qmk.json target
+qmk compile -kb drop/ctrl/v2 -km sigma       # build a single target
+make clean                                   # wipe .build/ and lingering binaries
 ```
 
-If you wish to manually manage `qmk_firmware` using git within the userspace repository, you can add `qmk_firmware` as a submodule in the userspace directory instead. GitHub Actions will automatically use the submodule at the pinned revision if it exists, otherwise it will use the default latest revision of `qmk_firmware` from the main repository.
+The top-level `Makefile` forwards to `qmk_firmware` and overrides `clean` to also remove the `*.hex`/`*.bin`/`*.uf2` that `cpfirmware` copies into the repo root.
 
-This can also be used to control which fork is used, though only upstream `qmk_firmware` will have support for external userspace until other manufacturers update their forks.
+## GitHub Actions
 
-1. (First time only) `git submodule add https://github.com/qmk/qmk_firmware.git`
-1. (To update) `git submodule update --init --recursive`
-1. Commit your changes to your userspace repository
+`.github/workflows/build_binaries.yaml` builds every `qmk.json` target on push and uploads firmware to the Releases tab; it delegates to the reusable workflows at `qmk/.github`.
