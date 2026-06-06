@@ -1,13 +1,6 @@
 #include QMK_KEYBOARD_H
 #include "sigma.h"
 
-enum ctrl_keycodes {
-    DBG_TOG = NEW_SAFE_RANGE, //DEBUG Toggle On / Off
-    DBG_MTRX,                 //DEBUG Toggle Matrix Prints
-    DBG_KBD,                  //DEBUG Toggle Keyboard Prints
-    DBG_MOU,                  //DEBUG Toggle Mouse Prints
-};
-
 #define CTLRET LCTL_T(KC_ENT)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -31,26 +24,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case DBG_TOG:
-            if (record->event.pressed) {
-                debug_enable = !debug_enable;
-            }
-            return false;
-        case DBG_MTRX:
-            if (record->event.pressed) {
-                debug_matrix = !debug_matrix;
-            }
-            return false;
-        case DBG_KBD:
-            if (record->event.pressed) {
-                debug_keyboard = !debug_keyboard;
-            }
-            return false;
-        case DBG_MOU:
-            if (record->event.pressed) {
-                debug_mouse = !debug_mouse;
-            }
-            return false;
         case RM_TOGG:
             if (record->event.pressed) {
               switch (rgb_matrix_get_flags()) {
