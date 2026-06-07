@@ -71,3 +71,46 @@ enum userspace_custom_keycodes
 #define SIGMA_FN      MO(_FN)
 #define SIGMA_HYPER   LCAG(KC_NO)       // Ctrl+Alt+GUI hold (3 mods, no shift)
 #define SIGMA_HYPER_S HYPR(KC_NO)       // SIGMA_HYPER + Shift (all 4 mods)
+
+// Capability-conditional macros: real keycode when the board supports the
+// feature, KC_NO otherwise. Each one expects whatever header defines the
+// underlying keycode (e.g. keychron_common.h for BT_HST*/BAT_LVL/KC_SNAP/
+// KC_SIRI) to be included before sigma.h.
+
+// Backlight value control: RGB matrix > rgblight underglow > no-op.
+#ifdef RGB_MATRIX_ENABLE
+  #define SIGMA_BL_DOWN RM_VALD
+  #define SIGMA_BL_UP   RM_VALU
+#elif defined(RGBLIGHT_ENABLE)
+  #define SIGMA_BL_DOWN UG_VALD
+  #define SIGMA_BL_UP   UG_VALU
+#else
+  #define SIGMA_BL_DOWN KC_NO
+  #define SIGMA_BL_UP   KC_NO
+#endif
+
+// Keychron Bluetooth host switching + battery indicator.
+#if defined(KC_BLUETOOTH_ENABLE) || defined(LK_WIRELESS_ENABLE)
+  #define SIGMA_BT1 BT_HST1
+  #define SIGMA_BT2 BT_HST2
+  #define SIGMA_BT3 BT_HST3
+  #define SIGMA_BAT BAT_LVL
+#else
+  #define SIGMA_BT1 KC_NO
+  #define SIGMA_BT2 KC_NO
+  #define SIGMA_BT3 KC_NO
+  #define SIGMA_BAT KC_NO
+#endif
+
+// Mac convenience keys provided by keychron_common.h.
+#ifdef KC_SNAP
+  #define SIGMA_SCRN_SHOT KC_SNAP
+#else
+  #define SIGMA_SCRN_SHOT KC_NO
+#endif
+
+#ifdef KC_SIRI
+  #define SIGMA_SIRI KC_SIRI
+#else
+  #define SIGMA_SIRI KC_NO
+#endif
