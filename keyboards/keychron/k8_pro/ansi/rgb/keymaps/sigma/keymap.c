@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = KMAP(
-        KC_ESC,   KC_BRID,  KC_BRIU,  KC_MCTL,  KC_LPAD,  SIGMA_BL_DOWN, SIGMA_BL_UP, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU,             SIGMA_SCRN_SHOT, SIGMA_SIRI, UG_NEXT,
+        KC_ESC,   KC_BRID,  KC_BRIU,  KC_MCTL,  KC_LPAD,  SIGMA_BL_VALD, SIGMA_BL_VALU, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU,            SIGMA_SCRN_SHOT, SIGMA_SIRI, SIGMA_BL_NEXT,
         KC_GRV,   SIGMA_NUM_ROW,                                                                                      KC_MINS,  KC_EQL,   KC_BSPC,   KC_INS,   KC_HOME,  KC_PGUP,
         KC_TAB,   SIGMA_QWE_ROW,                                                                                      KC_LBRC,  KC_RBRC,  KC_BSLS,   KC_DEL,   KC_END,   KC_PGDN,
         SIGMA_CTL,  SIGMA_ASD_ROW,                                                                                                        SIGMA_CTL_R,

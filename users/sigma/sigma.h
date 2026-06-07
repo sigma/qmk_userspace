@@ -87,16 +87,44 @@ enum userspace_custom_keycodes
 // underlying keycode (e.g. keychron_common.h for BT_HST*/BAT_LVL/KC_SNAP/
 // KC_SIRI) to be included before sigma.h.
 
-// Backlight value control: RGB matrix > rgblight underglow > no-op.
+// Backlight controls: RGB matrix > rgblight underglow > no-op. Naming
+// mirrors the RM_*/UG_* keycode family so the mapping is obvious.
 #ifdef RGB_MATRIX_ENABLE
-  #define SIGMA_BL_DOWN RM_VALD
-  #define SIGMA_BL_UP   RM_VALU
+  #define SIGMA_BL_TOGG RM_TOGG
+  #define SIGMA_BL_NEXT RM_NEXT
+  #define SIGMA_BL_PREV RM_PREV
+  #define SIGMA_BL_VALU RM_VALU
+  #define SIGMA_BL_VALD RM_VALD
+  #define SIGMA_BL_HUEU RM_HUEU
+  #define SIGMA_BL_HUED RM_HUED
+  #define SIGMA_BL_SATU RM_SATU
+  #define SIGMA_BL_SATD RM_SATD
+  #define SIGMA_BL_SPDU RM_SPDU
+  #define SIGMA_BL_SPDD RM_SPDD
 #elif defined(RGBLIGHT_ENABLE)
-  #define SIGMA_BL_DOWN UG_VALD
-  #define SIGMA_BL_UP   UG_VALU
+  #define SIGMA_BL_TOGG UG_TOGG
+  #define SIGMA_BL_NEXT UG_NEXT
+  #define SIGMA_BL_PREV UG_PREV
+  #define SIGMA_BL_VALU UG_VALU
+  #define SIGMA_BL_VALD UG_VALD
+  #define SIGMA_BL_HUEU UG_HUEU
+  #define SIGMA_BL_HUED UG_HUED
+  #define SIGMA_BL_SATU UG_SATU
+  #define SIGMA_BL_SATD UG_SATD
+  #define SIGMA_BL_SPDU UG_SPDU
+  #define SIGMA_BL_SPDD UG_SPDD
 #else
-  #define SIGMA_BL_DOWN KC_NO
-  #define SIGMA_BL_UP   KC_NO
+  #define SIGMA_BL_TOGG KC_NO
+  #define SIGMA_BL_NEXT KC_NO
+  #define SIGMA_BL_PREV KC_NO
+  #define SIGMA_BL_VALU KC_NO
+  #define SIGMA_BL_VALD KC_NO
+  #define SIGMA_BL_HUEU KC_NO
+  #define SIGMA_BL_HUED KC_NO
+  #define SIGMA_BL_SATU KC_NO
+  #define SIGMA_BL_SATD KC_NO
+  #define SIGMA_BL_SPDU KC_NO
+  #define SIGMA_BL_SPDD KC_NO
 #endif
 
 // Keychron Bluetooth host switching + battery indicator.
@@ -110,6 +138,14 @@ enum userspace_custom_keycodes
   #define SIGMA_BT2 KC_NO
   #define SIGMA_BT3 KC_NO
   #define SIGMA_BAT KC_NO
+#endif
+
+// Keychron 2.4 GHz mode toggle (boards with the P24G_MODE_SELECT_PIN or
+// KEYCOMBO_CONN_SWITCH_ENABLE wiring; e.g. Q1 Max).
+#if defined(P24G_MODE_SELECT_PIN) || defined(KEYCOMBO_CONN_SWITCH_ENABLE)
+  #define SIGMA_P2P4G P2P4G
+#else
+  #define SIGMA_P2P4G KC_NO
 #endif
 
 // Mac convenience keys provided by keychron_common.h.
