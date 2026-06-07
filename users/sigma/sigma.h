@@ -68,6 +68,11 @@ enum userspace_custom_keycodes
 #define SIGMA_ZXC_R KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH
 #define SIGMA_ZXC_ROW SIGMA_ZXC_L, SIGMA_ZXC_R
 
+// Function row: OS-aware F1-F12 (see OS_F* dispatch in sigma.c).
+#define SIGMA_FN_ROW \
+  OS_F1, OS_F2, OS_F3,  OS_F4,  OS_F5,  OS_F6, \
+  OS_F7, OS_F8, OS_F9, OS_F10, OS_F11, OS_F12
+
 // Behavior tokens shared across keymaps.
 #define SIGMA_CTL     LCTL_T(KC_ENT)
 #define SIGMA_CTL_R   RCTL_T(KC_ENT)
