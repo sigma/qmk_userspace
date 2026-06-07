@@ -64,8 +64,10 @@ enum userspace_custom_keycodes
 #define SIGMA_ZXC_ROW SIGMA_ZXC_L, SIGMA_ZXC_R
 
 // Behavior tokens shared across keymaps.
-#define SIGMA_CTL   LCTL_T(KC_ENT)
-#define SIGMA_CTL_R RCTL_T(KC_ENT)
-#define SIGMA_LSFT  SC_LSPO
-#define SIGMA_RSFT  SC_RSPC
-#define SIGMA_FN    MO(_FN)
+#define SIGMA_CTL     LCTL_T(KC_ENT)
+#define SIGMA_CTL_R   RCTL_T(KC_ENT)
+#define SIGMA_LSFT    SC_LSPO
+#define SIGMA_RSFT    SC_RSPC
+#define SIGMA_FN      MO(_FN)
+#define SIGMA_HYPER   LCAG(KC_NO)       // Ctrl+Alt+GUI hold (3 mods, no shift)
+#define SIGMA_HYPER_S HYPR(KC_NO)       // SIGMA_HYPER + Shift (all 4 mods)
