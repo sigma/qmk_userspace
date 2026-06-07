@@ -19,10 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keychron_common.h"
 #include "sigma.h"
 
-// Layer-mod tokens for via_hacks' left-side hyper / meh-with-shift combos.
-#define LM_HYPR(layer)   LM(layer, MOD_LGUI | MOD_LCTL | MOD_LALT)
-#define LM_HYPR_S(layer) LM(layer, MOD_LGUI | MOD_LCTL | MOD_LALT | MOD_LSFT)
-
 // Indirection so SIGMA_*_ROW macros expand before LAYOUT counts its args.
 #define KMAP(...) LAYOUT_ansi_82(__VA_ARGS__)
 
@@ -33,7 +29,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,   SIGMA_QWE_ROW,                                                                                      KC_LBRC,  KC_RBRC,  KC_BSLS,            KC_PGDN,
         SIGMA_CTL,  SIGMA_ASD_ROW,                                                                                                        SIGMA_CTL_R,        KC_HOME,
         SIGMA_LSFT,           SIGMA_ZXC_ROW,                                                                                              SIGMA_RSFT, KC_UP,
-        LM_HYPR(_FN), KC_LCMMD, KC_LOPTN,                              KC_SPC,                                 KC_RCMMD, MO(_FN), LM_HYPR_S(_FN), KC_LEFT, KC_DOWN, KC_RGHT
+        SIGMA_HYPER, KC_LCMMD, KC_LOPTN,                              KC_SPC,                                 KC_RCMMD, SIGMA_FN, SIGMA_HYPER_S, KC_LEFT, KC_DOWN, KC_RGHT
     ),
 
     [_FN] = KMAP(
