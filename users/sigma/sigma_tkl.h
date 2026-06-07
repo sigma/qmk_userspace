@@ -22,7 +22,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  SIGMA_QWE_ROW,                                                                    KC_LBRC, KC_RBRC, KC_BSLS,            KC_DEL,  KC_END,  KC_PGDN,
         SIGMA_CTL,  SIGMA_ASD_ROW,                                                                                   SIGMA_CTL_R,
         SIGMA_LSFT, SIGMA_ZXC_ROW,                                                                                   SIGMA_RSFT,                  KC_UP,
-        SIGMA_HYPER, KC_LGUI, KC_LALT,                   KC_SPC,                         KC_RALT, KC_RGUI, SIGMA_FN, SIGMA_HYPER_S,    KC_LEFT, KC_DOWN, KC_RGHT
+        SIGMA_MOD_ROW(3, 4)
     ),
     [_FN] = KMAP(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,            KC_MUTE, _______, _______,
