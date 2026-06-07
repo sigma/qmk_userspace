@@ -84,6 +84,23 @@ enum userspace_custom_keycodes
   OS_F1, OS_F2, OS_F3,  OS_F4,  OS_F5,  OS_F6, \
   OS_F7, OS_F8, OS_F9, OS_F10, OS_F11, OS_F12
 
+// Modifier row for non-split keyboards. L is the number of slots to the
+// left of KC_SPC (SIGMA_HYPER + plain mods); R is the number to the
+// right (plain mods + SIGMA_FN + SIGMA_HYPER_S). Followed by the three
+// arrow keys KC_LEFT / KC_DOWN / KC_RGHT. SIGMA_MOD_ROW(L, R) dispatches
+// to the matching SIGMA_MOD_ROW_L_R specialization below — add new
+// specializations as new layouts need them.
+#define SIGMA_MOD_ROW(L, R)         SIGMA_MOD_ROW_EXPAND(L, R)
+#define SIGMA_MOD_ROW_EXPAND(L, R)  SIGMA_MOD_ROW_##L##_##R
+
+// 3 slots left of space, 3 right (e.g. q1_max bottom row, no RALT slot).
+#define SIGMA_MOD_ROW_3_3 \
+  SIGMA_HYPER, KC_LGUI, KC_LALT,                   KC_SPC,                         KC_RGUI, SIGMA_FN, SIGMA_HYPER_S,    KC_LEFT, KC_DOWN, KC_RGHT
+
+// 3 slots left of space, 4 right (standard TKL ANSI bottom row).
+#define SIGMA_MOD_ROW_3_4 \
+  SIGMA_HYPER, KC_LGUI, KC_LALT,                   KC_SPC,                         KC_RALT, KC_RGUI, SIGMA_FN, SIGMA_HYPER_S,    KC_LEFT, KC_DOWN, KC_RGHT
+
 // Behavior tokens shared across keymaps.
 #define SIGMA_CTL     LCTL_T(KC_ENT)
 #define SIGMA_CTL_R   RCTL_T(KC_ENT)
