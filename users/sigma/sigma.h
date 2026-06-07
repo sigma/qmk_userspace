@@ -41,6 +41,11 @@ enum userspace_custom_keycodes
    KC_OS_LOCK,
    KC_SCRT,
    MD_BOOT,           // Hold to reset into bootloader
+   // OS-aware function row: F1-F12 on Win/Linux, Mac media-row equivalents
+   // on macOS/iOS. Holding _FN inverts the mapping (so on Mac fn+Play
+   // sends F8). Dispatched at runtime in sigma.c via detected_host_os().
+   OS_F1, OS_F2, OS_F3,  OS_F4,  OS_F5,  OS_F6,
+   OS_F7, OS_F8, OS_F9, OS_F10, OS_F11, OS_F12,
    SIGMA_SAFE_RANGE   // base for keymap-specific custom keycodes
   };
 

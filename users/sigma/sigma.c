@@ -250,6 +250,61 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       reset_keyboard();
     }
     return false;
+
+  // OS-aware function row. On the base layer: F1-F12 on Win/Linux/unsure,
+  // the Mac media row on macOS/iOS. On the _FN layer the meaning is
+  // inverted, so on Mac fn+Play sends F8 and on Win/Linux fn+F8 sends
+  // Play. F5/F6 are special-cased on the media side to drive the
+  // keyboard's lighting directly (RM_*/UG_* aren't HID keycodes and can't
+  // be (un)registered).
+  case OS_F1: case OS_F2: case OS_F3: case OS_F4: case OS_F5: case OS_F6:
+  case OS_F7: case OS_F8: case OS_F9: case OS_F10: case OS_F11: case OS_F12: {
+    // Remember which keycode each slot registered on press, so the matching
+    // unregister fires even if the user releases _FN before the F-row key.
+    static uint16_t os_f_active[12] = {0};
+    static const uint16_t mac_keys[12] = {
+      KC_BRID, KC_BRIU, KC_MCTL, KC_LPAD,
+      KC_NO,   KC_NO,                    // F5/F6: lighting, handled inline
+      KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU,
+    };
+    uint8_t idx = keycode - OS_F1;
+    if (pressed) {
+      bool is_mac = (os_target == OS_MACOS || os_target == OS_IOS);
+      bool on_fn = (get_highest_layer(layer_state) == _FN);
+      bool wants_media = is_mac ^ on_fn;
+      if (wants_media) {
+        switch (idx) {
+          case 4: // F5 — lighting value down
+#if defined(RGB_MATRIX_ENABLE)
+            rgb_matrix_decrease_val_noeeprom();
+#elif defined(RGBLIGHT_ENABLE)
+            rgblight_decrease_val_noeeprom();
+#endif
+            os_f_active[idx] = KC_NO;
+            break;
+          case 5: // F6 — lighting value up
+#if defined(RGB_MATRIX_ENABLE)
+            rgb_matrix_increase_val_noeeprom();
+#elif defined(RGBLIGHT_ENABLE)
+            rgblight_increase_val_noeeprom();
+#endif
+            os_f_active[idx] = KC_NO;
+            break;
+          default:
+            os_f_active[idx] = mac_keys[idx];
+            register_code16(mac_keys[idx]);
+            break;
+        }
+      } else {
+        os_f_active[idx] = KC_F1 + idx;
+        register_code16(KC_F1 + idx);
+      }
+    } else if (os_f_active[idx] != KC_NO) {
+      unregister_code16(os_f_active[idx]);
+      os_f_active[idx] = KC_NO;
+    }
+    return false;
+  }
   }
 
   return process_record_keymap(keycode, record);

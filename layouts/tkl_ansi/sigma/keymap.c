@@ -6,7 +6,7 @@
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = KMAP(
-        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,             KC_PSCR, KC_SCRL, KC_PAUS,
+        KC_ESC,  OS_F1,   OS_F2,   OS_F3,   OS_F4,   OS_F5,   OS_F6,   OS_F7,   OS_F8,   OS_F9,   OS_F10,  OS_F11,  OS_F12,             KC_PSCR, KC_SCRL, KC_PAUS,
         KC_GRV,  SIGMA_NUM_ROW,                                                                    KC_MINS, KC_EQL,  KC_BSPC,            KC_INS,  KC_HOME, KC_PGUP,
         KC_TAB,  SIGMA_QWE_ROW,                                                                    KC_LBRC, KC_RBRC, KC_BSLS,            KC_DEL,  KC_END,  KC_PGDN,
         SIGMA_CTL,  SIGMA_ASD_ROW,                                                                                   SIGMA_CTL_R,
