@@ -20,6 +20,17 @@
 #include "version.h"
 #include "os_detection.h"
 
+// Keychron boards ship custom keycodes (KC_LOPTN, BT_HST1, BAT_LVL, ...) in
+// their common header. Pull it in automatically when building against a
+// Keychron firmware tree so SIGMA_BT*/SIGMA_BAT/SIGMA_SCRN_SHOT/SIGMA_SIRI
+// resolve to real keycodes; on non-Keychron builds the header isn't on the
+// include path and the macros fall through to KC_NO.
+#if defined(__has_include)
+  #if __has_include("keychron_common.h")
+    #include "keychron_common.h"
+  #endif
+#endif
+
 // Define layer names
 enum userspace_layers
   {
