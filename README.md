@@ -9,8 +9,17 @@ Personal [QMK](https://github.com/qmk/qmk_firmware) keymaps for the boards I use
 | `drop/ctrl/v2` | `layouts/tkl_ansi/sigma/` (community layout) |
 | `converter/sun_usb/type5` | `keyboards/converter/sun_usb/type5/keymaps/sigma/` |
 | `ergodox_ez`, `input_club/ergodox_infinity` | `layouts/ergodox/sigma/` (community layout) |
+| `zsa/moonlander` | `keyboards/zsa/moonlander/keymaps/sigma/` |
 
-All four are listed in `qmk.json`'s `build_targets`.
+All are listed in `qmk.json`'s `build_targets`.
+
+The Moonlander deliberately diverges from the shared sigma contract (home-row
+mods, dedicated keypad / mouse layers, and per-key category RGB); see
+[`docs/sigma_keymaps.md`](docs/sigma_keymaps.md#board-specific-divergences) for
+the rationale. It also enables ZSA's Oryx / Keymapp support via the `zsa/oryx`
+[community module](https://docs.qmk.fm/features/community_modules) vendored
+under [`modules/zsa/`](modules/zsa/) and referenced from the keymap's
+`keymap.json`.
 
 ## Shared userspace (`users/sigma/`)
 
