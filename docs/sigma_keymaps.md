@@ -117,3 +117,52 @@ The `TAB` slot just outside the alpha block (row-2 outer) is reserved for `SIGMA
 None right now. Add new entries here when conflicts surface during keymap changes.
 
 When resolving an entry, update this table in the same change.
+
+## Board-specific divergences
+
+Most boards follow the principles above verbatim. A board may deliberately
+depart from them when its hardware or intended use calls for it — but the
+departure must be recorded here (per `AGENTS.md`) so the contract stays honest.
+
+### `zsa/moonlander`
+
+An ergonomic split (like the Ergodox) that keeps the shared QWERTY block
+(`SIGMA_*_L/R`, principle 1) and the `SIGMA_HYPER` / `SIGMA_HYPER_S` chords
+(principle 3), but diverges on three counts:
+
+- **Home-row mods.** `A S D F` / `J K L ;` are mod-taps (Ctrl / Alt / GUI /
+  Shift, pinky→index, mirrored) via the local `HR_*` / `SIGMA_HOME_L/R` macros.
+  The rest of the userspace uses plain letters plus `SIGMA_CTL` on the caps
+  slot; the Moonlander does not. Timing lives in the keymap's `config.h`
+  (`TAPPING_TERM`, `PERMISSIVE_HOLD`, `QUICK_TAP_TERM`).
+- **Three layers, restructured.** `_QWERTY` + `_FN` + a local `_MOUSE`. `_FN`
+  carries function keys (plain `KC_F1`..`KC_F12` at the digit positions, the
+  principle-2 no-dedicated-F-row carve-out), arrows as an inverted-T under the
+  index finger (`R` up, `D`/`F`/`G` left/down/right), media / volume /
+  brightness, and a right-hand keypad — *no* `SIGMA_FN_ROW`,
+  `SIGMA_BT*` or the shared `_FN` table above, which target row-staggered
+  boards. `_MOUSE` puts pointer movement on the same `R`/`D`/`F`/`G` inverted-T
+  as the `_FN` arrows, wheel on the right top row, buttons on the right home
+  row and left thumb, and acceleration on `Z X C`. `MD_BOOT` (B, hold ~500 ms then release) and `NK_TOGG` (N) live on
+  `_MOUSE` only — `_FN` intentionally omits them.
+- **Thumb clusters.** Space / Backspace / Tab / Enter (plus Esc, Del) live on
+  the thumb arcs. The two big thumb keys are custom `TH_FNL` / `TH_FNR`
+  (`process_record_keymap`): hold either for momentary `_FN`, press both
+  together to switch to `_MOUSE`, and press either again to return from
+  `_MOUSE` to `_QWERTY`.
+- **Per-key category RGB.** `rgb_matrix_indicators_advanced_user()` colours
+  every key by what it types on the active layer — letters blue, home-row mods a
+  darker blue (letter hue, dimmed), numbers green, symbols red, function keys
+  yellow, the space cluster (Space/Enter/Tab/Backspace) cyan, navigation
+  (arrows, Home/End, PgUp/PgDn) pink, layer keys magenta, system keys
+  (bootloader, NKRO & other magic toggles, RGB-matrix controls) orange, and any
+  other special key purple; transparent keys stay dark. Colours are read back out of the keymap, so they never drift from the
+  layout. The indicator yields (`rawhid_state.rgb_control`) whenever Oryx /
+  Keymapp drives the LEDs.
+- **Oryx / Keymapp support.** Enabled through the `zsa/oryx` community module,
+  vendored under `modules/zsa/` and referenced from the keymap's `keymap.json`.
+  The sibling `zsa/defaults` module is deliberately **not** used: it redefines
+  `TOGGLE_LAYER_COLOR` / `LED_LEVEL` (already provided by mainline
+  `moonlander.h`) and only adds trackpad/navigator keycodes this board lacks.
+  Because `defaults` normally supplies the fallback, the keymap's `config.h`
+  defines `SERIAL_NUMBER` itself.
