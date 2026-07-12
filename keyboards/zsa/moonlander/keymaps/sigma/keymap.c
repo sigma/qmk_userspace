@@ -35,11 +35,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // docs/sigma_keymaps.md): home-row mods, dedicated keypad / system layers, and
 // per-key RGB that colours every key by what it types.
 
-// _SYSTEM sits high (layer 11) so layers 2..10 stay free for future keymaps
-// that the number-row picker can address; it rides above the shared
-// _QWERTY (0) / _FN (1) pair from users/sigma/sigma.h.
+// Layers 2..6 stay free for now; the music layers occupy 7..10 and _SYSTEM
+// caps the stack at 11. All are reachable from the _SYSTEM number-row picker
+// (key N -> layer N). Rides above the shared _QWERTY (0) / _FN (1) pair from
+// users/sigma/sigma.h.
 enum moonlander_layers {
-    _SYSTEM = 11,
+    _TRAKTOR = 7,  // DJing (Traktor Pro)
+    _RENOISE = 8,  // Renoise tracker
+    _ABLETON = 9,  // Ableton Live
+    _MIDI    = 10, // 2-octave MIDI keyboard
+    _SYSTEM  = 11,
 };
 
 // The two big thumb keys. Hold either -> _FN (momentary); press both together
@@ -70,6 +75,36 @@ enum moonlander_keycodes {
 // so they drop straight into the LAYOUT the same way the other rows do.
 #define SIGMA_HOME_L HR_A, HR_S, HR_D, HR_F, HR_G
 #define SIGMA_HOME_R HR_H, HR_J, HR_K, HR_L, HR_SC
+
+// --- Music-layer shortcuts (macOS: Cmd = GUI) -----------------------------
+// The app layers send application shortcuts; the Renoise/Traktor layers also
+// expose the plain QWERTY block (no home-row mod-taps) so note entry / deck
+// triggers fire instantly.
+
+// Ableton Live (default macOS shortcuts).
+#define AB_UNDO  LGUI(KC_Z)
+#define AB_REDO  LGUI(LSFT(KC_Z))
+#define AB_DUP   LGUI(KC_D)
+#define AB_SPLT  LGUI(KC_E)
+#define AB_CONS  LGUI(KC_J)          // consolidate
+#define AB_CROP  LGUI(LSFT(KC_J))
+#define AB_INSL  LGUI(KC_I)          // insert silence
+#define AB_LOOP  LGUI(KC_L)
+#define AB_SLLP  LGUI(LSFT(KC_L))    // select loop content
+#define AB_SALL  LGUI(KC_A)
+#define AB_QNT   LGUI(KC_U)
+#define AB_CAPT  LGUI(LSFT(KC_C))    // capture MIDI
+#define AB_STOP  LGUI(KC_DOT)        // stop clip
+#define AB_DETL  LGUI(LALT(KC_L))    // toggle detail view
+#define AB_BROW  LGUI(LALT(KC_B))    // toggle browser
+
+// Renoise / Traktor helpers.
+#define RN_OCTD  LGUI(KC_LBRC)       // Renoise octave down
+#define RN_OCTU  LGUI(KC_RBRC)       // Renoise octave up
+#define RN_SAVE  LGUI(KC_S)
+#define TK_LDA   LGUI(KC_LEFT)       // Traktor load selected -> Deck A
+#define TK_LDB   LGUI(KC_RGHT)       // Traktor load selected -> Deck B
+#define TK_SRCH  LGUI(KC_F)          // Traktor focus browser search
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
@@ -117,6 +152,68 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_MUTE, KC_BRID, KC_BRIU, SIGMA_BL_VALU, SIGMA_BL_VALD,   KC_KP_1, KC_KP_2, KC_KP_3, _______, _______, _______,
         _______, _______, _______, _______, _______, _______,   _______, KC_KP_0, _______, _______, _______, _______,
         _______, _______, _______,                                        KC_DEL,  KC_KP_ENTER, KC_KP_DOT
+    ),
+
+    /*
+     * _MIDI - 2-octave chromatic keyboard. Number row = C4..B4, QWERTY row =
+     * C3..B3, each octave split C-F on the left hand / F#-B on the right. Outer
+     * columns: transpose (row 1) and velocity (row 2). Row 3: channel +/- and
+     * modulation. Thumbs: sustain / all-notes-off (left), pitch bend (right).
+     * Big thumbs return to _QWERTY.
+     */
+    [_MIDI] = KMAP(
+        MI_TRSD, MI_C4,   MI_Cs4,  MI_D4,   MI_Ds4,  MI_E4,   MI_F4,      MI_Fs4,  MI_G4,   MI_Gs4,  MI_A4,   MI_As4,  MI_B4,   MI_TRSU,
+        MI_VELD, MI_C3,   MI_Cs3,  MI_D3,   MI_Ds3,  MI_E3,   MI_F3,      MI_Fs3,  MI_G3,   MI_Gs3,  MI_A3,   MI_As3,  MI_B3,   MI_VELU,
+        MI_CHND, MI_MODD, MI_MOD,  MI_MODU, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MI_CHNU,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        MI_SUST, MI_AOFF, XXXXXXX,                                        MI_BNDD, MI_BNDU, XXXXXXX
+    ),
+
+    /*
+     * _ABLETON - Ableton Live (macOS). Left hand = editing, right hand = clip
+     * navigation (arrows) + metronome/draw/automation; thumbs = transport
+     * (Space, Shift+Space, Enter, Tab). Record F9, back-to-arrangement F10,
+     * grid Cmd+1..5. Big thumbs return to _QWERTY.
+     */
+    [_ABLETON] = KMAP(
+        XXXXXXX, LGUI(KC_1), LGUI(KC_2), LGUI(KC_3), LGUI(KC_4), LGUI(KC_5), XXXXXXX,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F9,
+        KC_TAB,  AB_UNDO, AB_REDO, AB_DUP,  AB_SPLT, AB_CONS, XXXXXXX,    XXXXXXX, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, XXXXXXX, KC_F10,
+        XXXXXXX, AB_LOOP, AB_SLLP, AB_QNT,  AB_INSL, AB_CROP, XXXXXXX,    XXXXXXX, KC_O,    KC_B,    KC_A,    XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, AB_SALL, AB_STOP, KC_DEL,  AB_CAPT, XXXXXXX,    AB_DETL, AB_BROW, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        KC_SPC,  LSFT(KC_SPC), KC_ENT,                                   KC_TAB,  XXXXXXX, XXXXXXX
+    ),
+
+    /*
+     * _RENOISE - Renoise tracker. Plain QWERTY block (instant note entry, no
+     * home-row mods) + real modifiers. Space play/stop/edit, Esc edit mode,
+     * Enter play line; Grave metronome, F13 follow, Cmd+[ / Cmd+] octave.
+     * Cmd on the right of the Z-row; Ctrl/Alt on the bottom row. Thumbs also
+     * carry Save / Undo / Redo. Big thumbs return to _QWERTY.
+     */
+    [_RENOISE] = KMAP(
+        KC_GRV,  SIGMA_NUM_L,          XXXXXXX,        XXXXXXX, SIGMA_NUM_R,          XXXXXXX,
+        KC_TAB,  SIGMA_QWE_L,          XXXXXXX,        XXXXXXX, SIGMA_QWE_R,          XXXXXXX,
+        XXXXXXX, SIGMA_ASD_L,          XXXXXXX,        XXXXXXX, SIGMA_ASD_R,          XXXXXXX,
+        KC_LSFT, SIGMA_ZXC_L,                                   SIGMA_ZXC_R,          KC_LGUI,
+        KC_LCTL, KC_LALT, RN_OCTD, RN_OCTU, KC_F13, _______,   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        KC_SPC,  KC_ESC,  KC_ENT,                                        RN_SAVE, LGUI(KC_Z), LGUI(LSFT(KC_Z))
+    ),
+
+    /*
+     * _TRAKTOR - DJing (Traktor legacy default mapping). Plain QWERTY for
+     * instant deck triggers: S/W play, Q/A cue, U/J sync, 1-4 / 6-9 hotcues,
+     * O/P & L/; loop in/out, Shift for the Shift+ combos. Load A/B = Cmd+arrows,
+     * search Cmd+F, browse Up/Down on the left thumb. Big thumbs return to base.
+     */
+    [_TRAKTOR] = KMAP(
+        XXXXXXX, SIGMA_NUM_L,          XXXXXXX,        XXXXXXX, SIGMA_NUM_R,          XXXXXXX,
+        KC_TAB,  SIGMA_QWE_L,          XXXXXXX,        XXXXXXX, SIGMA_QWE_R,          KC_LBRC,
+        XXXXXXX, SIGMA_ASD_L,          XXXXXXX,        XXXXXXX, SIGMA_ASD_R,          KC_QUOT,
+        KC_LSFT, SIGMA_ZXC_L,                                   SIGMA_ZXC_R,          KC_RSFT,
+        KC_LGUI, KC_LBRC, KC_RBRC, XXXXXXX, XXXXXXX, _______,   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        KC_UP,   KC_DOWN, XXXXXXX,                                        TK_LDA,  TK_LDB,  TK_SRCH
     ),
 
     /*

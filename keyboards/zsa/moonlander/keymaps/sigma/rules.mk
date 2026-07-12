@@ -10,3 +10,12 @@
 # Silence the piezo: the moonlander enables audio by default, which plays the
 # startup / goodbye / bootloader tunes. Turn it off so flashing is quiet.
 AUDIO_ENABLE = no
+
+# MIDI note/control keycodes (MI_*) for the _MIDI layer. config.h defines
+# MIDI_ADVANCED to get the full note/octave/velocity/etc. keycode set.
+MIDI_ENABLE = yes
+
+# The STM32F303 runs out of USB endpoints with RAW (oryx) + Console + MIDI +
+# Mousekey/Extrakey/NKRO. Drop Console (the sigma userspace turns it on for
+# debugging; this board doesn't need it) to make room for MIDI.
+CONSOLE_ENABLE = no

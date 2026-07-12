@@ -147,8 +147,9 @@ An ergonomic split (like the Ergodox) that keeps the shared QWERTY block
   left/down/right), media / volume / brightness, and a right-hand keypad —
   *no* `SIGMA_FN_ROW`, `SIGMA_BT*` or the shared `_FN` table above, which target
   row-staggered boards; `Fn` over the base `PgUp`/`PgDn` gives `Home`/`End`.
-  `_SYSTEM` is a system + pointer layer that sits at layer **11**, leaving
-  layers 2–10 free for future keymaps. Its number row is a layer picker (key N
+  `_SYSTEM` is a system + pointer layer that sits at layer **11**; layers 7–10
+  hold the music layers (below) and 2–6 stay free. Its number row is a layer
+  picker (key N
   jumps to layer N, `0` → layer 10) that only fires for — and fully lights —
   layers that are actually defined; a `defined_layers` bitmask, filled at boot
   by scanning each layer for content, keeps the empty gap layers dim and inert
@@ -156,6 +157,16 @@ An ergonomic split (like the Ergodox) that keeps the shared QWERTY block
   `R`/`D`/`F`/`G` inverted-T as the `_FN` arrows, the wheel on a mirrored
   `H`/`J`/`K`/`U` inverted-T, and mouse buttons on both thumb arcs. `MD_BOOT` (B, hold ~500 ms then release) and `NK_TOGG` (N) live on
   `_SYSTEM` only — `_FN` intentionally omits them.
+- **Music layers (experimental).** Four app layers reached from the `_SYSTEM`
+  picker: `_MIDI` (10) is a 2-octave chromatic keyboard (number row C4–B4 over
+  QWERTY-row C3–B3, split C–F / F#–B) with transpose / velocity / channel /
+  mod / sustain / bend controls; `_ABLETON` (9), `_RENOISE` (8) and `_TRAKTOR`
+  (7) send application shortcuts (macOS: Cmd = GUI). Renoise and Traktor expose
+  the plain QWERTY block (no home-row mod-taps) so note entry / deck triggers
+  fire instantly. Every music layer leaves the two big thumb keys transparent so
+  a thumb returns to `_QWERTY`, and unused keys are `KC_NO` to avoid stray
+  input. MIDI needs a USB endpoint the STM32F303 can't spare alongside RAW +
+  Console, so the keymap's `rules.mk` disables `CONSOLE_ENABLE`.
 - **Thumb clusters.** The lower thumb arcs carry Space / Tab / Esc on the left
   and Backspace / Enter / Space on the right (a Space under each thumb); on
   `_FN` the right arc becomes Del / Enter / `.` (so Del falls on Fn + the base

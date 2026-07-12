@@ -34,6 +34,10 @@
 // To also dim after keyboard inactivity while the host is awake, add e.g.:
 //   #define RGB_MATRIX_TIMEOUT 900000   // 15 minutes; any keypress restores
 
+// Full MIDI keycode set (note/octave/velocity/transpose/...) for the _MIDI
+// layer; MIDI_ENABLE is set in rules.mk.
+#define MIDI_ADVANCED
+
 // Pairing/identity string the zsa/oryx module reports to Oryx & Keymapp.
 // Mainline's moonlander doesn't set one, and we omit the zsa/defaults module
 // (it would clash with moonlander.h's TOGGLE_LAYER_COLOR / LED_LEVEL), so
