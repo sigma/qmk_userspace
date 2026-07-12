@@ -142,8 +142,8 @@ An ergonomic split (like the Ergodox) that keeps the shared QWERTY block
   brightness, and a right-hand keypad — *no* `SIGMA_FN_ROW`,
   `SIGMA_BT*` or the shared `_FN` table above, which target row-staggered
   boards. `_MOUSE` puts pointer movement on the same `R`/`D`/`F`/`G` inverted-T
-  as the `_FN` arrows, wheel on the right top row, and buttons on the right home
-  row and left thumb. `MD_BOOT` (B, hold ~500 ms then release) and `NK_TOGG` (N) live on
+  as the `_FN` arrows, the wheel on a mirrored `H`/`J`/`K`/`U` inverted-T, and
+  mouse buttons on both thumb arcs. `MD_BOOT` (B, hold ~500 ms then release) and `NK_TOGG` (N) live on
   `_MOUSE` only — `_FN` intentionally omits them.
 - **Thumb clusters.** Space / Backspace / Tab / Enter (plus Esc, Del) live on
   the thumb arcs. The two big thumb keys are custom `TH_FNL` / `TH_FNR`

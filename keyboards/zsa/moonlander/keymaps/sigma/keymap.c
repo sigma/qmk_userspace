@@ -113,18 +113,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     /*
-     * _MOUSE - pointer control. Movement on the R/D/F/G inverted-T (matching
-     * the _FN arrows), wheel on the right top row, buttons on the right home
-     * row and the left thumb. Reached by pressing both big thumbs together;
-     * either thumb returns to _QWERTY. Bootloader (B) and NKRO (N) live here.
+     * _MOUSE - pointer control. Movement on the left R/D/F/G inverted-T and the
+     * wheel on a mirrored H/J/K/U inverted-T on the right (U=up, H/J/K =
+     * left/down/right); mouse buttons on both thumb arcs. Reached by pressing
+     * both big thumbs together; either thumb returns to _QWERTY. Bootloader (B)
+     * and NKRO (N) live here.
      */
     [_MOUSE] = KMAP(
         _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, MS_UP,   _______, _______,    _______, MS_WHLU, MS_WHLD, MS_WHLL, MS_WHLR, _______, _______,
-        _______, _______, _______, MS_LEFT, MS_DOWN, MS_RGHT, _______,    _______, MS_BTN1, MS_BTN2, MS_BTN3, _______, _______, _______,
+        _______, _______, _______, _______, MS_UP,   _______, _______,    _______, _______, MS_WHLU, _______, _______, _______, _______,
+        _______, _______, _______, MS_LEFT, MS_DOWN, MS_RGHT, _______,    _______, MS_WHLL, MS_WHLD, MS_WHLR, _______, _______, _______,
         _______, _______, _______, _______, _______, MD_BOOT,    NK_TOGG, _______, _______, _______, _______, _______,
         _______, _______, _______, _______, _______, _______,   _______, _______, _______, _______, _______, _______,
-        MS_BTN1, MS_BTN2, MS_BTN3,                                        _______, _______, _______
+        MS_BTN1, MS_BTN2, MS_BTN3,                                        MS_BTN1, MS_BTN2, MS_BTN3
     ),
 };
 
