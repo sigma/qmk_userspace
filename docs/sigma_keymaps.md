@@ -147,12 +147,14 @@ An ergonomic split (like the Ergodox) that keeps the shared QWERTY block
   left/down/right), media / volume / brightness, and a right-hand keypad —
   *no* `SIGMA_FN_ROW`, `SIGMA_BT*` or the shared `_FN` table above, which target
   row-staggered boards; `Fn` over the base `PgUp`/`PgDn` gives `Home`/`End`.
-  `_SYSTEM` is a system + pointer layer: its number row is a layer picker (key
-  N jumps to layer N, `0` → base, when that layer exists — `LAYER_COUNT` is read
-  from the keymaps array so it extends automatically); it also puts pointer
-  movement on the same `R`/`D`/`F`/`G` inverted-T as the `_FN` arrows, the wheel
-  on a mirrored `H`/`J`/`K`/`U` inverted-T, and mouse buttons on both thumb
-  arcs. `MD_BOOT` (B, hold ~500 ms then release) and `NK_TOGG` (N) live on
+  `_SYSTEM` is a system + pointer layer that sits at layer **11**, leaving
+  layers 2–10 free for future keymaps. Its number row is a layer picker (key N
+  jumps to layer N, `0` → layer 10) that only fires for — and fully lights —
+  layers that are actually defined; a `defined_layers` bitmask, filled at boot
+  by scanning each layer for content, keeps the empty gap layers dim and inert
+  so it all extends automatically. It also puts pointer movement on the same
+  `R`/`D`/`F`/`G` inverted-T as the `_FN` arrows, the wheel on a mirrored
+  `H`/`J`/`K`/`U` inverted-T, and mouse buttons on both thumb arcs. `MD_BOOT` (B, hold ~500 ms then release) and `NK_TOGG` (N) live on
   `_SYSTEM` only — `_FN` intentionally omits them.
 - **Thumb clusters.** The lower thumb arcs carry Space / Tab / Esc on the left
   and Backspace / Enter / Space on the right (a Space under each thumb); on

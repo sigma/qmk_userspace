@@ -35,9 +35,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // docs/sigma_keymaps.md): home-row mods, dedicated keypad / system layers, and
 // per-key RGB that colours every key by what it types.
 
-// _SYSTEM rides above the shared _QWERTY/_FN pair from users/sigma/sigma.h.
+// _SYSTEM sits high (layer 11) so layers 2..10 stay free for future keymaps
+// that the number-row picker can address; it rides above the shared
+// _QWERTY (0) / _FN (1) pair from users/sigma/sigma.h.
 enum moonlander_layers {
-    _SYSTEM = _FN + 1,
+    _SYSTEM = 11,
 };
 
 // The two big thumb keys. Hold either -> _FN (momentary); press both together
@@ -119,7 +121,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     /*
      * _SYSTEM - system + pointer layer. The number row is a layer picker: key N
-     * jumps to layer N (0 -> base) when that layer exists. Pointer movement on
+     * jumps to layer N (0 -> 10) when that layer exists. Pointer movement on
      * the left R/D/F/G inverted-T, wheel on a mirrored H/J/K/U inverted-T on the
      * right; mouse buttons on both thumb arcs. Reached by pressing both big
      * thumbs together; either thumb returns to _QWERTY. Bootloader (B) and NKRO
@@ -135,10 +137,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
-// Number of defined layers, taken straight from the keymaps array so the
-// _SYSTEM layer picker (see process_record_keymap) automatically covers any
-// layers added later.
+// Size of the keymaps array (its highest layer index + 1). Because _SYSTEM
+// sits at 11, layers 2..10 are present but empty until defined.
 #define LAYER_COUNT (sizeof(keymaps) / sizeof((keymaps)[0]))
+
+// A layer "exists" for the _SYSTEM picker only if it actually has content, so
+// the empty gap layers don't count. This bitmask is filled once at boot
+// (keyboard_post_init_user) by scanning each layer for a non-KC_NO key.
+static uint16_t defined_layers = 0;
+
+static bool layer_is_defined(uint8_t layer) {
+    for (uint8_t r = 0; r < MATRIX_ROWS; r++) {
+        for (uint8_t c = 0; c < MATRIX_COLS; c++) {
+            if (keymap_key_to_keycode(layer, (keypos_t){.col = c, .row = r}) != KC_NO) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// _SYSTEM number key -> target layer: 1..9 map straight through, 0 -> 10.
+static uint8_t sys_picker_layer(uint16_t kc) {
+    return (kc == KC_0) ? 10 : (uint8_t)(kc - KC_1 + 1);
+}
 
 // ---------------------------------------------------------------------------
 // Per-key RGB by keycode category
@@ -303,11 +325,9 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
             } else {
                 uint8_t v = category_value(cat, val);
                 // _SYSTEM layer picker: dim the numbers with no matching layer.
-                if (layer == _SYSTEM && kc >= KC_1 && kc <= KC_0) {
-                    uint8_t target = (kc == KC_0) ? 0 : (uint8_t)(kc - KC_1 + 1);
-                    if (target >= LAYER_COUNT) {
-                        v = (uint8_t)((uint16_t)v * VAL_INACTIVE_PCT / 100);
-                    }
+                if (layer == _SYSTEM && kc >= KC_1 && kc <= KC_0 &&
+                    !(defined_layers & (1u << sys_picker_layer(kc)))) {
+                    v = (uint8_t)((uint16_t)v * VAL_INACTIVE_PCT / 100);
                 }
                 HSV hsv = {category_hue(cat), 255, v};
                 RGB rgb = hsv_to_rgb(hsv);
@@ -322,9 +342,9 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 // together -> switch to the _SYSTEM layer (persistent); on any persistently
 // switched layer, either thumb returns to _QWERTY.
 //
-// _SYSTEM number row is a layer picker: key N jumps to layer N (0 -> base)
-// when that layer exists (< LAYER_COUNT). `sticky` tracks whether we sit on a
-// persistently switched layer, so the thumb knows to bounce back to base.
+// _SYSTEM number row is a layer picker: key N jumps to layer N (0 -> 10) when
+// that layer is actually defined (defined_layers). `sticky` tracks whether we
+// sit on a persistently switched layer, so the thumb bounces back to base.
 //
 // process_record_user() in users/sigma dispatches here for keymap keycodes.
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
@@ -332,10 +352,10 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
 
     if (record->event.pressed && get_highest_layer(layer_state) == _SYSTEM &&
         keycode >= KC_1 && keycode <= KC_0) {
-        uint8_t target = (keycode == KC_0) ? 0 : (uint8_t)(keycode - KC_1 + 1);
-        if (target < LAYER_COUNT) {
+        uint8_t target = sys_picker_layer(keycode);
+        if (defined_layers & (1u << target)) {
             layer_move(target);
-            sticky = (target != _QWERTY);
+            sticky = true;
         }
         return false;
     }
@@ -372,4 +392,12 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
 void keyboard_post_init_user(void) {
     // Make sure the matrix is on so the category colours are visible at boot.
     rgb_matrix_enable_noeeprom();
+
+    // Record which layers actually have a keymap so the _SYSTEM picker only
+    // switches to (and fully lights) the layers that exist.
+    for (uint8_t l = 0; l < LAYER_COUNT; l++) {
+        if (layer_is_defined(l)) {
+            defined_layers |= (uint16_t)(1u << l);
+        }
+    }
 }
