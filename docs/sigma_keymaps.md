@@ -139,24 +139,28 @@ An ergonomic split (like the Ergodox) that keeps the shared QWERTY block
   letters plus `SIGMA_CTL` on the caps slot; the Moonlander does not. Timing
   lives in the keymap's `config.h` (`TAPPING_TERM`, `PERMISSIVE_HOLD`,
   `QUICK_TAP_TERM`).
-- **Three layers, restructured.** `_QWERTY` + `_FN` + a local `_MOUSE`. The
+- **Three layers, restructured.** `_QWERTY` + `_FN` + a local `_SYSTEM`. The
   base layer keeps a small nav cluster on the two inner columns (arrows plus
   `PgUp`/`PgDn`). `_FN` carries function keys (plain `KC_F1`..`KC_F12` at the
   digit positions, the principle-2 no-dedicated-F-row carve-out), a second set
   of arrows as an inverted-T under the index finger (`R` up, `D`/`F`/`G`
   left/down/right), media / volume / brightness, and a right-hand keypad —
   *no* `SIGMA_FN_ROW`, `SIGMA_BT*` or the shared `_FN` table above, which target
-  row-staggered boards; `Fn` over the base `PgUp`/`PgDn` gives `Home`/`End`. `_MOUSE` puts pointer movement on the same `R`/`D`/`F`/`G` inverted-T
-  as the `_FN` arrows, the wheel on a mirrored `H`/`J`/`K`/`U` inverted-T, and
-  mouse buttons on both thumb arcs. `MD_BOOT` (B, hold ~500 ms then release) and `NK_TOGG` (N) live on
-  `_MOUSE` only — `_FN` intentionally omits them.
+  row-staggered boards; `Fn` over the base `PgUp`/`PgDn` gives `Home`/`End`.
+  `_SYSTEM` is a system + pointer layer: its number row is a layer picker (key
+  N jumps to layer N, `0` → base, when that layer exists — `LAYER_COUNT` is read
+  from the keymaps array so it extends automatically); it also puts pointer
+  movement on the same `R`/`D`/`F`/`G` inverted-T as the `_FN` arrows, the wheel
+  on a mirrored `H`/`J`/`K`/`U` inverted-T, and mouse buttons on both thumb
+  arcs. `MD_BOOT` (B, hold ~500 ms then release) and `NK_TOGG` (N) live on
+  `_SYSTEM` only — `_FN` intentionally omits them.
 - **Thumb clusters.** The lower thumb arcs carry Space / Tab / Esc on the left
   and Backspace / Enter / Space on the right (a Space under each thumb); on
   `_FN` the right arc becomes Del / Enter / `.` (so Del falls on Fn + the base
   Backspace). The two big thumb keys are custom `TH_FNL` / `TH_FNR`
   (`process_record_keymap`): hold either for momentary `_FN`, press both
-  together to switch to `_MOUSE`, and press either again to return from
-  `_MOUSE` to `_QWERTY`.
+  together to switch to `_SYSTEM`, and press either again to return from any
+  persistently switched layer to `_QWERTY`.
 - **Per-key category RGB.** `rgb_matrix_indicators_advanced_user()` colours
   every key by what it types on the active layer — letters blue, home-row mods a
   darker blue (letter hue, dimmed), numbers green, symbols red, function keys

@@ -32,16 +32,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // The Moonlander is an ergo split like the Ergodox, so it borrows the shared
 // SIGMA_*_L/R QWERTY halves. On top of that it carries three board-specific
 // features the rest of the userspace doesn't (documented in
-// docs/sigma_keymaps.md): home-row mods, dedicated keypad / mouse layers, and
+// docs/sigma_keymaps.md): home-row mods, dedicated keypad / system layers, and
 // per-key RGB that colours every key by what it types.
 
-// _MOUSE rides above the shared _QWERTY/_FN pair from users/sigma/sigma.h.
+// _SYSTEM rides above the shared _QWERTY/_FN pair from users/sigma/sigma.h.
 enum moonlander_layers {
-    _MOUSE = _FN + 1,
+    _SYSTEM = _FN + 1,
 };
 
 // The two big thumb keys. Hold either -> _FN (momentary); press both together
-// -> switch to _MOUSE; on _MOUSE, either one -> back to _QWERTY. The state
+// -> switch to _SYSTEM; on _SYSTEM, either one -> back to _QWERTY. The state
 // machine lives in process_record_keymap() below.
 enum moonlander_keycodes {
     TH_FNL = SIGMA_SAFE_RANGE, // left big thumb
@@ -82,8 +82,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * `----------------------'   ,-----------.        ,-----------.  `----------------------'
      *                           |Spc|Tab|Esc |        |Bsp|Ent|Spc|
      *                           `-----------'         `-----------'
-     * (both Fn thumbs: hold = _FN, both together = switch to _MOUSE, either
-     *  returns from _MOUSE to _QWERTY.)
+     * (both Fn thumbs: hold = _FN, both together = switch to _SYSTEM, either
+     *  returns from _SYSTEM to _QWERTY.)
      */
     [_QWERTY] = KMAP(
         KC_GRV,  SIGMA_NUM_L,          KC_UP,          KC_PGUP, SIGMA_NUM_R,          KC_MINS,
@@ -99,7 +99,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * left/down/right), media / volume, and an aligned right-hand keypad (no
      * symbols). 0 sits below the 2; the right thumb carries Del / Enter / dot
      * (Del lands on Fn + the base Backspace). Fn over the base PgUp / PgDn inner
-     * keys gives Home / End. Bootloader / NKRO live on _MOUSE.
+     * keys gives Home / End. Bootloader / NKRO live on _SYSTEM.
      *
      *  F11  F1  F2  F3  F4  F5                    F6  F7  F8  F9  F10  F12
      *       Prv Ply Nxt Up                         7   8   9   /   *   Num
@@ -118,14 +118,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     /*
-     * _MOUSE - pointer control. Movement on the left R/D/F/G inverted-T and the
-     * wheel on a mirrored H/J/K/U inverted-T on the right (U=up, H/J/K =
-     * left/down/right); mouse buttons on both thumb arcs. Reached by pressing
-     * both big thumbs together; either thumb returns to _QWERTY. Bootloader (B)
-     * and NKRO (N) live here.
+     * _SYSTEM - system + pointer layer. The number row is a layer picker: key N
+     * jumps to layer N (0 -> base) when that layer exists. Pointer movement on
+     * the left R/D/F/G inverted-T, wheel on a mirrored H/J/K/U inverted-T on the
+     * right; mouse buttons on both thumb arcs. Reached by pressing both big
+     * thumbs together; either thumb returns to _QWERTY. Bootloader (B) and NKRO
+     * (N) live here.
      */
-    [_MOUSE] = KMAP(
-        _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
+    [_SYSTEM] = KMAP(
+        _______, SIGMA_NUM_L,          _______,        _______, SIGMA_NUM_R,          _______,
         _______, _______, _______, _______, MS_UP,   _______, _______,    _______, _______, MS_WHLU, _______, _______, _______, _______,
         _______, _______, _______, MS_LEFT, MS_DOWN, MS_RGHT, _______,    _______, MS_WHLL, MS_WHLD, MS_WHLR, _______, _______, _______,
         _______, _______, _______, _______, _______, MD_BOOT,    NK_TOGG, _______, _______, _______, _______, _______,
@@ -133,6 +134,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         MS_BTN1, MS_BTN2, MS_BTN3,                                        MS_BTN1, MS_BTN2, MS_BTN3
     ),
 };
+
+// Number of defined layers, taken straight from the keymaps array so the
+// _SYSTEM layer picker (see process_record_keymap) automatically covers any
+// layers added later.
+#define LAYER_COUNT (sizeof(keymaps) / sizeof((keymaps)[0]))
 
 // ---------------------------------------------------------------------------
 // Per-key RGB by keycode category
@@ -299,12 +305,27 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     return false;
 }
 
-// Thumb Fn keys (TH_FNL / TH_FNR). Hold either -> _FN (momentary). Press both
-// together -> switch to the _MOUSE layer (persistent). While on _MOUSE, either
-// thumb returns to _QWERTY. process_record_user() in users/sigma dispatches
-// here for keymap-specific keycodes.
+// Thumb Fn keys (TH_FNL / TH_FNR): hold either -> _FN (momentary); press both
+// together -> switch to the _SYSTEM layer (persistent); on any persistently
+// switched layer, either thumb returns to _QWERTY.
+//
+// _SYSTEM number row is a layer picker: key N jumps to layer N (0 -> base)
+// when that layer exists (< LAYER_COUNT). `sticky` tracks whether we sit on a
+// persistently switched layer, so the thumb knows to bounce back to base.
+//
+// process_record_user() in users/sigma dispatches here for keymap keycodes.
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
-    static bool l_held = false, r_held = false, mouse_mode = false;
+    static bool l_held = false, r_held = false, sticky = false;
+
+    if (record->event.pressed && get_highest_layer(layer_state) == _SYSTEM &&
+        keycode >= KC_1 && keycode <= KC_0) {
+        uint8_t target = (keycode == KC_0) ? 0 : (uint8_t)(keycode - KC_1 + 1);
+        if (target < LAYER_COUNT) {
+            layer_move(target);
+            sticky = (target != _QWERTY);
+        }
+        return false;
+    }
 
     if (keycode != TH_FNL && keycode != TH_FNR) {
         return true;
@@ -314,22 +335,21 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
 
     if (record->event.pressed) {
         *self = true;
-        if (mouse_mode) {
-            // On the mouse layer, either thumb returns to the base layer.
-            layer_off(_MOUSE);
-            mouse_mode = false;
+        if (sticky) {
+            // On a persistently switched layer -> return to base.
+            layer_move(_QWERTY);
+            sticky = false;
         } else if (l_held && r_held) {
-            // Both thumbs together -> switch to the mouse layer.
-            layer_off(_FN);
-            layer_on(_MOUSE);
-            mouse_mode = true;
+            // Both thumbs together -> switch to the system layer.
+            layer_move(_SYSTEM);
+            sticky = true;
         } else {
             // A single thumb -> momentary _FN.
             layer_on(_FN);
         }
     } else {
         *self = false;
-        if (!mouse_mode && !l_held && !r_held) {
+        if (!sticky && !l_held && !r_held) {
             layer_off(_FN);
         }
     }
