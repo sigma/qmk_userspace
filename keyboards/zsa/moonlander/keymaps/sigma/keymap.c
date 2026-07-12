@@ -76,21 +76,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * ,--------------------------------------------.       ,--------------------------------------------.
      * |  `   | 1 | 2 | 3 | 4 | 5 |  Up  |          | PgUp | 6 | 7 | 8 | 9 | 0 |  -   |   (PgUp/PgDn = Home/End on _FN)
      * |  =   | Q | W | E | R | T | Down |          | PgDn | Y | U | I | O | P |  \   |
-     * |      | A | S | D | F | G | Left |          | Rght | H | J | K | L | ; |  '   |   (A-G / H-; = home-row mods; G/H = Hyper)
-     * |      | Z | X | C | V | B |------.          |------| N | M | , | . | / |      |
-     * |      | ( | [ | { | < | Fn |                | Fn | > | } | ] | ) |      |
+     * |  @   | A | S | D | F | G | Left |          | Rght | H | J | K | L | ; |  '   |   (A-G / H-; = home-row mods; G/H = Hyper)
+     * |  $   | Z | X | C | V | B |------.          |------| N | M | , | . | / |  &   |
+     * |  _   | ( | [ | { | < | Fn |                      | Fn | > | } | ] | ) |  *   |
      * `----------------------'   ,-----------.        ,-----------.  `----------------------'
      *                           |Spc|Tab|Esc |        |Bsp|Ent|Spc|
-     *                           `-----------'          `-----------'
+     *                           `-----------'         `-----------'
      * (both Fn thumbs: hold = _FN, both together = switch to _MOUSE, either
      *  returns from _MOUSE to _QWERTY.)
      */
     [_QWERTY] = KMAP(
         KC_GRV,  SIGMA_NUM_L,          KC_UP,          KC_PGUP, SIGMA_NUM_R,          KC_MINS,
         KC_EQL,  SIGMA_QWE_L,          KC_DOWN,        KC_PGDN, SIGMA_QWE_R,          KC_BSLS,
-        XXXXXXX, SIGMA_HOME_L,         KC_LEFT,        KC_RGHT, SIGMA_HOME_R,         KC_QUOT,
-        XXXXXXX, SIGMA_ZXC_L,                                   SIGMA_ZXC_R,          XXXXXXX,
-        XXXXXXX, KC_LPRN, KC_LBRC, KC_LCBR, KC_LABK, TH_FNL,   TH_FNR, KC_RABK, KC_RCBR, KC_RBRC, KC_RPRN, XXXXXXX,
+        KC_AT,   SIGMA_HOME_L,         KC_LEFT,        KC_RGHT, SIGMA_HOME_R,         KC_QUOT,
+        KC_DLR,  SIGMA_ZXC_L,                                   SIGMA_ZXC_R,          KC_AMPR,
+        KC_UNDS, KC_LPRN, KC_LBRC, KC_LCBR, KC_LABK, TH_FNL,   TH_FNR, KC_RABK, KC_RCBR, KC_RBRC, KC_RPRN, KC_ASTR,
         KC_SPC,  KC_TAB,  KC_ESC,                                        KC_BSPC, KC_ENT,  KC_SPC
     ),
 
