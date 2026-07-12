@@ -127,17 +127,17 @@ departure must be recorded here (per `AGENTS.md`) so the contract stays honest.
 ### `zsa/moonlander`
 
 An ergonomic split (like the Ergodox) that keeps the shared QWERTY block
-(`SIGMA_*_L/R`, principle 1) and the `SIGMA_HYPER` chord (principle 3), but
-diverges on several counts:
+(`SIGMA_*_L/R`, principle 1) but diverges on several counts:
 
 - **Home-row mods.** `A S D F G` / `H J K L ;` are mod-taps via the local
   `HR_*` / `SIGMA_HOME_L/R` macros: Ctrl / Alt / GUI / Shift on the four fingers
   (pinky→index, mirrored), and the index-inner `G` / `H` hold Hyper
   (Ctrl+Alt+GUI, same as `SIGMA_HYPER`). Because Shift (`F` / `J`) sits right
-  next to Hyper, the dedicated `SIGMA_HYPER_S` chord is dropped — the right
-  bottom corner is plain `SIGMA_HYPER` instead. The rest of the userspace uses
-  plain letters plus `SIGMA_CTL` on the caps slot; the Moonlander does not.
-  Timing lives in the keymap's `config.h` (`TAPPING_TERM`, `PERMISSIVE_HOLD`,
+  next to Hyper, `SIGMA_HYPER_S` is dropped; and with the mods now on the home
+  row, the redundant outer-column keys (Caps, dedicated Shift, and the corner
+  `SIGMA_HYPER` — principle 3) are removed. The rest of the userspace uses plain
+  letters plus `SIGMA_CTL` on the caps slot; the Moonlander does not. Timing
+  lives in the keymap's `config.h` (`TAPPING_TERM`, `PERMISSIVE_HOLD`,
   `QUICK_TAP_TERM`).
 - **Three layers, restructured.** `_QWERTY` + `_FN` + a local `_MOUSE`. `_FN`
   carries function keys (plain `KC_F1`..`KC_F12` at the digit positions, the
@@ -149,8 +149,10 @@ diverges on several counts:
   as the `_FN` arrows, the wheel on a mirrored `H`/`J`/`K`/`U` inverted-T, and
   mouse buttons on both thumb arcs. `MD_BOOT` (B, hold ~500 ms then release) and `NK_TOGG` (N) live on
   `_MOUSE` only — `_FN` intentionally omits them.
-- **Thumb clusters.** Space / Backspace / Tab / Enter (plus Esc, Del) live on
-  the thumb arcs. The two big thumb keys are custom `TH_FNL` / `TH_FNR`
+- **Thumb clusters.** The lower thumb arcs carry Space / Tab / Esc on the left
+  and Backspace / Enter / Space on the right (a Space under each thumb); on
+  `_FN` the right arc becomes Del / Enter / `.` (so Del falls on Fn + the base
+  Backspace). The two big thumb keys are custom `TH_FNL` / `TH_FNR`
   (`process_record_keymap`): hold either for momentary `_FN`, press both
   together to switch to `_MOUSE`, and press either again to return from
   `_MOUSE` to `_QWERTY`.
