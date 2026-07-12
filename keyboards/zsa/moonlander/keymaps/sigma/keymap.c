@@ -155,16 +155,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     /*
-     * _MIDI - 2-octave chromatic keyboard. Number row = C4..B4, QWERTY row =
-     * C3..B3, each octave split C-F on the left hand / F#-B on the right. Outer
-     * columns: transpose (row 1) and velocity (row 2). Row 3: channel +/- and
-     * modulation. Thumbs: sustain / all-notes-off (left), pitch bend (right).
-     * Big thumbs return to _QWERTY.
+     * _MIDI - one octave, piano-style, shiftable. QWERTY row = white keys
+     * (Q..U = C D E F G A B), number row = black keys (2/3 5/6/7 = C#/D# F#/G#/A#).
+     * Notes are relative (MI_C..MI_B), so the octave-down/up keys on the row-1
+     * corners shift the whole keyboard; transpose sits on the row-2 corners.
+     * Row 3: velocity, channel, mod. Thumbs: sustain / all-notes-off (left),
+     * pitch bend (right). Big thumbs return to _QWERTY.
      */
     [_MIDI] = KMAP(
-        MI_TRSD, MI_C4,   MI_Cs4,  MI_D4,   MI_Ds4,  MI_E4,   MI_F4,      MI_Fs4,  MI_G4,   MI_Gs4,  MI_A4,   MI_As4,  MI_B4,   MI_TRSU,
-        MI_VELD, MI_C3,   MI_Cs3,  MI_D3,   MI_Ds3,  MI_E3,   MI_F3,      MI_Fs3,  MI_G3,   MI_Gs3,  MI_A3,   MI_As3,  MI_B3,   MI_VELU,
-        MI_CHND, MI_MODD, MI_MOD,  MI_MODU, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MI_CHNU,
+        MI_OCTD, XXXXXXX, MI_Cs,   MI_Ds,   XXXXXXX, MI_Fs,   XXXXXXX,    XXXXXXX, MI_Gs,   MI_As,   XXXXXXX, XXXXXXX, XXXXXXX, MI_OCTU,
+        MI_TRSD, MI_C,    MI_D,    MI_E,    MI_F,    MI_G,    XXXXXXX,    XXXXXXX, MI_A,    MI_B,    XXXXXXX, XXXXXXX, XXXXXXX, MI_TRSU,
+        MI_VELD, MI_CHND, MI_MOD,  MI_CHNU, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MI_VELU,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         MI_SUST, MI_AOFF, XXXXXXX,                                        MI_BNDD, MI_BNDU, XXXXXXX
@@ -267,7 +268,8 @@ static uint8_t sys_picker_layer(uint16_t kc) {
 //   home-row mods  dark blue  function keys  yellow
 //   numbers        green      layer keys     magenta
 //   space cluster  cyan       system keys    orange
-//   navigation     pink       other special  purple
+//   navigation     pink       MIDI keys      spring green
+//   other special  purple
 // (space cluster = Space/Enter/Tab/Backspace; navigation = arrows, Home/End,
 // PgUp/PgDn; system = bootloader, NKRO & other magic toggles, and the
 // RGB-matrix lighting controls. Home-row mods share the letter hue but a
@@ -289,6 +291,7 @@ enum category_hue {
     HUE_NAV      = 234, // pink
     HUE_LAYER    = 213, // magenta
     HUE_SYSTEM   = 21,  // orange
+    HUE_MIDI     = 106, // spring green
     HUE_SPECIAL  = 191, // purple
 };
 
@@ -311,6 +314,7 @@ typedef enum {
     CAT_NAV,
     CAT_LAYER,
     CAT_SYSTEM,
+    CAT_MIDI,
     CAT_SPECIAL,
 } key_category_t;
 
@@ -329,6 +333,11 @@ static key_category_t classify_keycode(uint16_t kc) {
     // the RGB-matrix lighting controls (RM_* / SIGMA_BL_*).
     if (kc == QK_BOOT || kc == MD_BOOT || IS_QK_MAGIC(kc) || IS_RGB_MATRIX_KEYCODE(kc)) {
         return CAT_SYSTEM;
+    }
+
+    // MIDI notes and controls (the _MIDI layer).
+    if (IS_QK_MIDI(kc)) {
+        return CAT_MIDI;
     }
 
     // Home-row mods (mod-taps) get their own paler blue -- test before
@@ -384,6 +393,7 @@ static uint8_t category_hue(key_category_t cat) {
         case CAT_NAV:      return HUE_NAV;
         case CAT_LAYER:    return HUE_LAYER;
         case CAT_SYSTEM:   return HUE_SYSTEM;
+        case CAT_MIDI:     return HUE_MIDI;
         default:           return HUE_SPECIAL;
     }
 }

@@ -158,9 +158,11 @@ An ergonomic split (like the Ergodox) that keeps the shared QWERTY block
   `H`/`J`/`K`/`U` inverted-T, and mouse buttons on both thumb arcs. `MD_BOOT` (B, hold ~500 ms then release) and `NK_TOGG` (N) live on
   `_SYSTEM` only — `_FN` intentionally omits them.
 - **Music layers (experimental).** Four app layers reached from the `_SYSTEM`
-  picker: `_MIDI` (10) is a 2-octave chromatic keyboard (number row C4–B4 over
-  QWERTY-row C3–B3, split C–F / F#–B) with transpose / velocity / channel /
-  mod / sustain / bend controls; `_ABLETON` (9), `_RENOISE` (8) and `_TRAKTOR`
+  picker: `_MIDI` (10) is a one-octave, piano-style keyboard — QWERTY row =
+  white keys (`Q`..`U` = C–B), number row = black keys (`2`/`3` `5`/`6`/`7`) —
+  with relative notes so the row-1 corner keys shift the whole octave, plus
+  transpose / velocity / channel / mod / sustain / bend controls (all lit in a
+  distinct MIDI colour); `_ABLETON` (9), `_RENOISE` (8) and `_TRAKTOR`
   (7) send application shortcuts (macOS: Cmd = GUI). Renoise and Traktor expose
   the plain QWERTY block (no home-row mod-taps) so note entry / deck triggers
   fire instantly. Every music layer leaves the two big thumb keys transparent so
