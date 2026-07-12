@@ -127,14 +127,18 @@ departure must be recorded here (per `AGENTS.md`) so the contract stays honest.
 ### `zsa/moonlander`
 
 An ergonomic split (like the Ergodox) that keeps the shared QWERTY block
-(`SIGMA_*_L/R`, principle 1) and the `SIGMA_HYPER` / `SIGMA_HYPER_S` chords
-(principle 3), but diverges on three counts:
+(`SIGMA_*_L/R`, principle 1) and the `SIGMA_HYPER` chord (principle 3), but
+diverges on several counts:
 
-- **Home-row mods.** `A S D F` / `J K L ;` are mod-taps (Ctrl / Alt / GUI /
-  Shift, pinky→index, mirrored) via the local `HR_*` / `SIGMA_HOME_L/R` macros.
-  The rest of the userspace uses plain letters plus `SIGMA_CTL` on the caps
-  slot; the Moonlander does not. Timing lives in the keymap's `config.h`
-  (`TAPPING_TERM`, `PERMISSIVE_HOLD`, `QUICK_TAP_TERM`).
+- **Home-row mods.** `A S D F G` / `H J K L ;` are mod-taps via the local
+  `HR_*` / `SIGMA_HOME_L/R` macros: Ctrl / Alt / GUI / Shift on the four fingers
+  (pinky→index, mirrored), and the index-inner `G` / `H` hold Hyper
+  (Ctrl+Alt+GUI, same as `SIGMA_HYPER`). Because Shift (`F` / `J`) sits right
+  next to Hyper, the dedicated `SIGMA_HYPER_S` chord is dropped — the right
+  bottom corner is plain `SIGMA_HYPER` instead. The rest of the userspace uses
+  plain letters plus `SIGMA_CTL` on the caps slot; the Moonlander does not.
+  Timing lives in the keymap's `config.h` (`TAPPING_TERM`, `PERMISSIVE_HOLD`,
+  `QUICK_TAP_TERM`).
 - **Three layers, restructured.** `_QWERTY` + `_FN` + a local `_MOUSE`. `_FN`
   carries function keys (plain `KC_F1`..`KC_F12` at the digit positions, the
   principle-2 no-dedicated-F-row carve-out), arrows as an inverted-T under the

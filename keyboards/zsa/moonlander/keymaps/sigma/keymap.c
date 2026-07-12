@@ -50,11 +50,15 @@ enum moonlander_keycodes {
 
 // Home-row mods: tap = the letter, hold = a modifier. Order matches the Oryx
 // sigma-coding config this board grew out of: Ctrl / Alt / GUI / Shift running
-// pinky -> index, mirrored across the two hands.
+// pinky -> index, mirrored across the two hands. The two index-inner keys
+// (G / H) hold Hyper (Ctrl+Alt+GUI, same as SIGMA_HYPER) -- combine with the
+// adjacent Shift (F / J) to get the old Hyper+Shift, so SIGMA_HYPER_S is gone.
 #define HR_A  LCTL_T(KC_A)
 #define HR_S  LALT_T(KC_S)
 #define HR_D  LGUI_T(KC_D)
 #define HR_F  LSFT_T(KC_F)
+#define HR_G  LCAG_T(KC_G)
+#define HR_H  LCAG_T(KC_H)
 #define HR_J  RSFT_T(KC_J)
 #define HR_K  RGUI_T(KC_K)
 #define HR_L  RALT_T(KC_L)
@@ -62,8 +66,8 @@ enum moonlander_keycodes {
 
 // Home rows with the mods folded in, shaped like SIGMA_ASD_L/R (5 keys each)
 // so they drop straight into the LAYOUT the same way the other rows do.
-#define SIGMA_HOME_L HR_A, HR_S, HR_D, HR_F, KC_G
-#define SIGMA_HOME_R KC_H, HR_J, HR_K, HR_L, HR_SC
+#define SIGMA_HOME_L HR_A, HR_S, HR_D, HR_F, HR_G
+#define SIGMA_HOME_R HR_H, HR_J, HR_K, HR_L, HR_SC
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
@@ -72,9 +76,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * ,--------------------------------------------.       ,--------------------------------------------.
      * |  `   | 1 | 2 | 3 | 4 | 5 | Home |          | PgUp | 6 | 7 | 8 | 9 | 0 |  -   |
      * |  =   | Q | W | E | R | T | End  |          | PgDn | Y | U | I | O | P |  \   |
-     * | Caps | A | S | D | F | G | Del  |          | Bspc | H | J | K | L | ; |  '   |   (A-F/J-; = home-row mods)
+     * | Caps | A | S | D | F | G | Del  |          | Bspc | H | J | K | L | ; |  '   |   (A-G / H-; = home-row mods; G/H = Hyper)
      * | LSft | Z | X | C | V | B |------.          |------| N | M | , | . | / | RSft |
-     * | Hypr | ( | [ | { | < | Fn |                | Fn | > | } | ] | ) | Hyp+ |
+     * | Hypr | ( | [ | { | < | Fn |                | Fn | > | } | ] | ) | Hypr |
      * `----------------------'   ,-----------.        ,-----------.  `----------------------'
      *                           |Spc|Bsp|Esc |        |Del|Tab|Ent|
      *                           `-----------'          `-----------'
@@ -86,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_EQL,  SIGMA_QWE_L,          KC_END,         KC_PGDN, SIGMA_QWE_R,          KC_BSLS,
         KC_CAPS, SIGMA_HOME_L,         KC_DEL,         KC_BSPC, SIGMA_HOME_R,         KC_QUOT,
         KC_LSFT, SIGMA_ZXC_L,                                   SIGMA_ZXC_R,          KC_RSFT,
-        SIGMA_HYPER, KC_LPRN, KC_LBRC, KC_LCBR, KC_LABK, TH_FNL,   TH_FNR, KC_RABK, KC_RCBR, KC_RBRC, KC_RPRN, SIGMA_HYPER_S,
+        SIGMA_HYPER, KC_LPRN, KC_LBRC, KC_LCBR, KC_LABK, TH_FNL,   TH_FNR, KC_RABK, KC_RCBR, KC_RBRC, KC_RPRN, SIGMA_HYPER,
         KC_SPC,  KC_BSPC, KC_ESC,                                        KC_DEL,  KC_TAB,  KC_ENT
     ),
 
