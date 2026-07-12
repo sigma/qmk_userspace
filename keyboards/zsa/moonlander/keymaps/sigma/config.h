@@ -28,11 +28,15 @@
 #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_COLOR
 
 // Go dark while the host is asleep: on USB suspend the matrix renders
-// RGB_MATRIX_NONE, which also gates off rgb_matrix_indicators_advanced_user(),
-// so the semantic highlighting turns off too. Lights return on wake.
+// RGB_MATRIX_NONE, which also gates off rgb_matrix_indicators_advanced_user()
+// (rgb_matrix_task only paints indicators when the effect is non-zero), so the
+// semantic highlighting turns off too. Lights return on wake.
 #define RGB_MATRIX_SLEEP
-// To also dim after keyboard inactivity while the host is awake, add e.g.:
-//   #define RGB_MATRIX_TIMEOUT 900000   // 15 minutes; any keypress restores
+// RGB_MATRIX_SLEEP only fires on a real USB suspend (full system sleep); merely
+// idling -- screensaver, the display sleeping -- keeps the keyboard powered, so
+// the lights would otherwise stay on. Also turn the LEDs off after a stretch of
+// no keyboard input (any keypress restores them instantly).
+#define RGB_MATRIX_TIMEOUT 300000   // 5 minutes of keyboard inactivity
 
 // Full MIDI keycode set (note/octave/velocity/transpose/...) for the _MIDI
 // layer; MIDI_ENABLE is set in rules.mk.
