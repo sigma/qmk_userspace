@@ -177,6 +177,10 @@ enum category_hue {
 // fraction of the active brightness, giving a distinct darker blue.
 #define VAL_HOMEROW_PCT 40
 
+// On _SYSTEM the number row is a layer picker; numbers whose target layer does
+// not exist are dimmed to this fraction so only the live ones stand out.
+#define VAL_INACTIVE_PCT 15
+
 typedef enum {
     CAT_OFF,
     CAT_LETTER,
@@ -292,11 +296,20 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
             }
 
             keypos_t       pos = {.col = col, .row = row};
-            key_category_t cat = classify_keycode(keymap_key_to_keycode(layer, pos));
+            uint16_t       kc  = keymap_key_to_keycode(layer, pos);
+            key_category_t cat = classify_keycode(kc);
             if (cat == CAT_OFF) {
                 rgb_matrix_set_color(led, 0, 0, 0);
             } else {
-                HSV hsv = {category_hue(cat), 255, category_value(cat, val)};
+                uint8_t v = category_value(cat, val);
+                // _SYSTEM layer picker: dim the numbers with no matching layer.
+                if (layer == _SYSTEM && kc >= KC_1 && kc <= KC_0) {
+                    uint8_t target = (kc == KC_0) ? 0 : (uint8_t)(kc - KC_1 + 1);
+                    if (target >= LAYER_COUNT) {
+                        v = (uint8_t)((uint16_t)v * VAL_INACTIVE_PCT / 100);
+                    }
+                }
+                HSV hsv = {category_hue(cat), 255, v};
                 RGB rgb = hsv_to_rgb(hsv);
                 rgb_matrix_set_color(led, rgb.r, rgb.g, rgb.b);
             }
