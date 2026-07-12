@@ -74,9 +74,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * _QWERTY - as many keys as possible sit directly here.
      *
      * ,--------------------------------------------.       ,--------------------------------------------.
-     * |  `   | 1 | 2 | 3 | 4 | 5 | Home |          | PgUp | 6 | 7 | 8 | 9 | 0 |  -   |
-     * |  =   | Q | W | E | R | T | End  |          | PgDn | Y | U | I | O | P |  \   |
-     * |      | A | S | D | F | G | Del  |          | Bspc | H | J | K | L | ; |  '   |   (A-G / H-; = home-row mods; G/H = Hyper)
+     * |  `   | 1 | 2 | 3 | 4 | 5 |  Up  |          | PgUp | 6 | 7 | 8 | 9 | 0 |  -   |   (PgUp/PgDn = Home/End on _FN)
+     * |  =   | Q | W | E | R | T | Down |          | PgDn | Y | U | I | O | P |  \   |
+     * |      | A | S | D | F | G | Left |          | Rght | H | J | K | L | ; |  '   |   (A-G / H-; = home-row mods; G/H = Hyper)
      * |      | Z | X | C | V | B |------.          |------| N | M | , | . | / |      |
      * |      | ( | [ | { | < | Fn |                | Fn | > | } | ] | ) |      |
      * `----------------------'   ,-----------.        ,-----------.  `----------------------'
@@ -86,9 +86,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *  returns from _MOUSE to _QWERTY.)
      */
     [_QWERTY] = KMAP(
-        KC_GRV,  SIGMA_NUM_L,          KC_HOME,        KC_PGUP, SIGMA_NUM_R,          KC_MINS,
-        KC_EQL,  SIGMA_QWE_L,          KC_END,         KC_PGDN, SIGMA_QWE_R,          KC_BSLS,
-        XXXXXXX, SIGMA_HOME_L,         KC_DEL,         KC_BSPC, SIGMA_HOME_R,         KC_QUOT,
+        KC_GRV,  SIGMA_NUM_L,          KC_UP,          KC_PGUP, SIGMA_NUM_R,          KC_MINS,
+        KC_EQL,  SIGMA_QWE_L,          KC_DOWN,        KC_PGDN, SIGMA_QWE_R,          KC_BSLS,
+        XXXXXXX, SIGMA_HOME_L,         KC_LEFT,        KC_RGHT, SIGMA_HOME_R,         KC_QUOT,
         XXXXXXX, SIGMA_ZXC_L,                                   SIGMA_ZXC_R,          XXXXXXX,
         XXXXXXX, KC_LPRN, KC_LBRC, KC_LCBR, KC_LABK, TH_FNL,   TH_FNR, KC_RABK, KC_RCBR, KC_RBRC, KC_RPRN, XXXXXXX,
         KC_SPC,  KC_TAB,  KC_ESC,                                        KC_BSPC, KC_ENT,  KC_SPC
@@ -98,7 +98,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * _FN - arrows as an inverted-T under the index finger (R=up, D/F/G =
      * left/down/right), media / volume, and an aligned right-hand keypad (no
      * symbols). 0 sits below the 2; the right thumb carries Del / Enter / dot
-     * (Del lands on Fn + the base Backspace). Bootloader / NKRO live on _MOUSE.
+     * (Del lands on Fn + the base Backspace). Fn over the base PgUp / PgDn inner
+     * keys gives Home / End. Bootloader / NKRO live on _MOUSE.
      *
      *  F11  F1  F2  F3  F4  F5                    F6  F7  F8  F9  F10  F12
      *       Prv Ply Nxt Up                         7   8   9   /   *   Num
@@ -108,8 +109,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *  thumbs:                              Del Enter  .
      */
     [_FN] = KMAP(
-        KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   _______,    _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,
-        _______, KC_MPRV, KC_MPLY, KC_MNXT, KC_UP,   _______, _______,    _______, KC_KP_7, KC_KP_8, KC_KP_9, KC_KP_SLASH,    KC_KP_ASTERISK, KC_NUM,
+        KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   _______,    KC_HOME, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,
+        _______, KC_MPRV, KC_MPLY, KC_MNXT, KC_UP,   _______, _______,    KC_END,  KC_KP_7, KC_KP_8, KC_KP_9, KC_KP_SLASH,    KC_KP_ASTERISK, KC_NUM,
         _______, KC_VOLD, KC_VOLU, KC_LEFT, KC_DOWN, KC_RGHT, _______,    _______, KC_KP_4, KC_KP_5, KC_KP_6, KC_KP_MINUS,    KC_KP_PLUS,     _______,
         _______, KC_MUTE, KC_BRID, KC_BRIU, SIGMA_BL_VALU, SIGMA_BL_VALD,   KC_KP_1, KC_KP_2, KC_KP_3, _______, _______, _______,
         _______, _______, _______, _______, _______, _______,   _______, KC_KP_0, _______, _______, _______, _______,

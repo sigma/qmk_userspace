@@ -139,13 +139,14 @@ An ergonomic split (like the Ergodox) that keeps the shared QWERTY block
   letters plus `SIGMA_CTL` on the caps slot; the Moonlander does not. Timing
   lives in the keymap's `config.h` (`TAPPING_TERM`, `PERMISSIVE_HOLD`,
   `QUICK_TAP_TERM`).
-- **Three layers, restructured.** `_QWERTY` + `_FN` + a local `_MOUSE`. `_FN`
-  carries function keys (plain `KC_F1`..`KC_F12` at the digit positions, the
-  principle-2 no-dedicated-F-row carve-out), arrows as an inverted-T under the
-  index finger (`R` up, `D`/`F`/`G` left/down/right), media / volume /
-  brightness, and a right-hand keypad — *no* `SIGMA_FN_ROW`,
-  `SIGMA_BT*` or the shared `_FN` table above, which target row-staggered
-  boards. `_MOUSE` puts pointer movement on the same `R`/`D`/`F`/`G` inverted-T
+- **Three layers, restructured.** `_QWERTY` + `_FN` + a local `_MOUSE`. The
+  base layer keeps a small nav cluster on the two inner columns (arrows plus
+  `PgUp`/`PgDn`). `_FN` carries function keys (plain `KC_F1`..`KC_F12` at the
+  digit positions, the principle-2 no-dedicated-F-row carve-out), a second set
+  of arrows as an inverted-T under the index finger (`R` up, `D`/`F`/`G`
+  left/down/right), media / volume / brightness, and a right-hand keypad —
+  *no* `SIGMA_FN_ROW`, `SIGMA_BT*` or the shared `_FN` table above, which target
+  row-staggered boards; `Fn` over the base `PgUp`/`PgDn` gives `Home`/`End`. `_MOUSE` puts pointer movement on the same `R`/`D`/`F`/`G` inverted-T
   as the `_FN` arrows, the wheel on a mirrored `H`/`J`/`K`/`U` inverted-T, and
   mouse buttons on both thumb arcs. `MD_BOOT` (B, hold ~500 ms then release) and `NK_TOGG` (N) live on
   `_MOUSE` only — `_FN` intentionally omits them.
