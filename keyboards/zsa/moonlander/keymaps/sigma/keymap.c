@@ -155,20 +155,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     /*
-     * _MIDI - one octave, piano-style, shiftable. QWERTY row = white keys
-     * (Q..U = C D E F G A B), number row = black keys (2/3 5/6/7 = C#/D# F#/G#/A#).
-     * Notes are relative (MI_C..MI_B), so the octave-down/up keys on the row-1
-     * corners shift the whole keyboard; transpose sits on the row-2 corners.
-     * Row 3: velocity, channel, mod. Thumbs: sustain / all-notes-off (left),
-     * pitch bend (right). Big thumbs return to _QWERTY.
+     * _MIDI - one octave on the RIGHT hand, piano-style: home row = white keys
+     * (C D E F G A B), QWERTY row = each sharp directly above its natural
+     * (C# D# _ F# G# A#). Notes are relative (MI_C..MI_B). The LEFT hand holds
+     * the controls: velocity / octave / octave on the home row, transpose above,
+     * channel + panic on the number row, mod on the bottom row, and sustain /
+     * pitch bend on the thumb. Big thumbs return to _QWERTY.
      */
     [_MIDI] = KMAP(
-        MI_OCTD, XXXXXXX, MI_Cs,   MI_Ds,   XXXXXXX, MI_Fs,   XXXXXXX,    XXXXXXX, MI_Gs,   MI_As,   XXXXXXX, XXXXXXX, XXXXXXX, MI_OCTU,
-        MI_TRSD, MI_C,    MI_D,    MI_E,    MI_F,    MI_G,    XXXXXXX,    XXXXXXX, MI_A,    MI_B,    XXXXXXX, XXXXXXX, XXXXXXX, MI_TRSU,
-        MI_VELD, MI_CHND, MI_MOD,  MI_CHNU, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MI_VELU,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        MI_AOFF, MI_CHND, MI_CHNU, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, MI_TRSD, MI_TRSU, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    MI_Cs,   MI_Ds,   XXXXXXX, MI_Fs,   MI_Gs,   MI_As,   XXXXXXX,
+        XXXXXXX, MI_VELD, MI_OCTD, MI_OCTU, MI_VELU, XXXXXXX, XXXXXXX,    MI_C,    MI_D,    MI_E,    MI_F,    MI_G,    MI_A,    MI_B,
+        XXXXXXX, MI_MODD, MI_MOD,  MI_MODU, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        MI_SUST, MI_AOFF, XXXXXXX,                                        MI_BNDD, MI_BNDU, XXXXXXX
+        MI_SUST, MI_BNDD, MI_BNDU,                                        XXXXXXX, XXXXXXX, XXXXXXX
     ),
 
     /*
